@@ -1,0 +1,68 @@
+{
+  "sales": {
+    "title": "Ventes et Achats",
+    "dashboard": "Tableau de bord",
+    "sections": {
+      "quotations": {
+        "title": "Devis",
+        "description": "Gérez vos devis et propositions commerciales",
+        "stats": "{{count}} en attente"
+      },
+      "orders": {
+        "title": "Commandes",
+        "description": "Suivez vos commandes clients",
+        "stats": "{{count}} en cours"
+      },
+      "deliveries": {
+        "title": "Livraisons",
+        "description": "Gérez vos livraisons et expéditions",
+        "stats": "{{count}} en transit"
+      },
+      "invoices": {
+        "title": "Factures",
+        "description": "Créez et suivez vos factures",
+        "stats": "{{count}} non payées"
+      },
+      "returns": {
+        "title": "Retours",
+        "description": "Gérez les retours clients",
+        "stats": "{{count}} en attente"
+      },
+      "discounts": {
+        "title": "Remises",
+        "description": "Configurez vos règles de remise",
+        "stats": "{{count}} actives"
+      }
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "newQuotation": "Nouveau devis",
+      "newOrder": "Nouvelle commande",
+      "newInvoice": "Nouvelle facture"
+    }
+  },
+  "common": {
+    "language": "Langue",
+    "french": "Français",
+    "english": "Anglais"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Gérez les paramètres de votre application",
+    "tabs": {
+      "general": "Paramètres Généraux",
+      "company": "Paramètres de l'entreprise",
+      "sales": "Paramètres des ventes",
+      "purchase": "Paramètres des achats",
+      "inventory": "Paramètres de l'inventaire",
+      "accounting": "Paramètres de la comptabilité",
+      "notifications": "Paramètres des notifications",
+      "documents": "Paramètres des documents",
+      "payments": "Paramètres des paiements"
+    },
+    "language": {
+      "title": "Préférences de langue",
+      "description": "Choisissez votre langue préférée pour l'interface utilisateur"
+    }
+  }
+} 

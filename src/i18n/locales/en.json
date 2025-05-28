@@ -1,0 +1,68 @@
+{
+  "sales": {
+    "title": "Sales and Purchases",
+    "dashboard": "Dashboard",
+    "sections": {
+      "quotations": {
+        "title": "Quotations",
+        "description": "Manage your quotes and commercial proposals",
+        "stats": "{{count}} pending"
+      },
+      "orders": {
+        "title": "Orders",
+        "description": "Track your customer orders",
+        "stats": "{{count}} in progress"
+      },
+      "deliveries": {
+        "title": "Deliveries",
+        "description": "Manage your shipments and deliveries",
+        "stats": "{{count}} in transit"
+      },
+      "invoices": {
+        "title": "Invoices",
+        "description": "Create and track your invoices",
+        "stats": "{{count}} unpaid"
+      },
+      "returns": {
+        "title": "Returns",
+        "description": "Manage customer returns",
+        "stats": "{{count}} pending"
+      },
+      "discounts": {
+        "title": "Discounts",
+        "description": "Configure your discount rules",
+        "stats": "{{count}} active"
+      }
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "newQuotation": "New Quotation",
+      "newOrder": "New Order",
+      "newInvoice": "New Invoice"
+    }
+  },
+  "common": {
+    "language": "Language",
+    "french": "French",
+    "english": "English"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your application settings",
+    "tabs": {
+      "general": "General Settings",
+      "company": "Company Settings",
+      "sales": "Sales Settings",
+      "purchase": "Purchase Settings",
+      "inventory": "Inventory Settings",
+      "accounting": "Accounting Settings",
+      "notifications": "Notification Settings",
+      "documents": "Document Settings",
+      "payments": "Payment Settings"
+    },
+    "language": {
+      "title": "Language Preferences",
+      "description": "Choose your preferred language for the user interface"
+    }
+  }
+} 
