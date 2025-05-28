@@ -1,112 +1,128 @@
-import React from 'react';
-import { createBrowserRouter } from "react-router";
+import React from "react";
+import { createBrowserRouter } from "react-router-dom";
+import Layout from "../features/layout/Layout";
 import Dashboard from "../features/dashboard/Dashboard";
-import Login from "../features/auth/Login";
-import Signup from "../features/auth/Signup";
-import Forgotpassword from "../features/auth/Forgotpassword";
-import NotFound from "../pages/NotFound";
 import Settings from "../features/settings/Settings";
+import AccountantCopilot from "../features/accountant-copilot/AccountantCopilot";
+import SubscriptionPlans from "../features/subscription/SubscriptionPlans";
+import UserManagement from "../features/user-management/UserManagement";
+import UserDetails from "../features/user-management/UserDetails";
+import PurchaseOrders from "../features/purchase/PurchaseOrders";
+import PurchaseOrderDetails from "../features/purchase/PurchaseOrderDetails";
 import Sales from "../features/sales/Sales";
-import Buy from "../features/buy/Buy";
-import SalesDashboard from "../features/sales/pages/SalesDashboard";
-import BuyDashboard from "../features/buy/pages/BuyDashboard";
+import CRM from "../features/crm/CRM";
+import Accounting from "../features/accounting/Accounting";
+import HRDashboard from "../features/hr/pages/HRDashboard";
+import EmployeeList from "../features/hr/pages/EmployeeList";
+import LeaveManagement from "../features/hr/pages/LeaveManagement";
+import Login from "../features/auth/Login";
+import NewUser from "../features/auth/NewUser";
+import PrintQuotation from "../features/sales/pages/quotations/PrintQuotation";
+import ChartOfAccountsConfig from "../features/accounting/pages/ChartOfAccountsConfig";
+import NotFound from "../features/error/NotFound";
 import Quotations from "../features/sales/pages/quotations/Quotations";
 import QuotationsList from "../features/sales/pages/quotations/QuotationsList";
-import NewQuotation from "../features/sales/components/NewQuotation";
 import QuotationDetails from "../features/sales/pages/quotations/QuotationDetails";
-import PurchaseOrders from "../features/buy/pages/purchase-orders/PurchaseOrders";
-import NewPurchaseOrder from "../features/buy/components/NewPurchaseOrder";
-import PurchaseOrderDetails from "../features/buy/pages/purchase-orders/PurchaseOrderDetails";
-import PrintQuotation from '../features/sales/pages/quotations/PrintQuotation';
+import PermissionsAndRoles from "../features/settings/pages/PermissionsAndRoles";
+import MyBusiness from "../features/settings/pages/MyBusiness";
 
-const routes = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Dashboard,
+    Component: Layout,
     children: [
       {
-        path: "settings",
-        Component: Settings,
-      },
-      {
-        path: "quotations/create",
-        Component: NewQuotation,
+        path: "dashboard",
+        element: <Dashboard />,
       },
       {
         path: "quotations",
-        Component: QuotationsList,
+        element: <Quotations />
       },
       {
         path: "quotations/:id",
-        Component: QuotationDetails,
+        element: <QuotationDetails />
       },
       {
-        path: "quotations/:id/print",
-        Component: PrintQuotation,
+        path: "settings",
+        element: <Settings />,
       },
       {
-        path: "sales",
-        Component: Sales,
-        children: [
-          // Quotations routes
-        ],
+        path: "accountant-copilot",
+        element: <AccountantCopilot />,
+      },
+      {
+        path: "subscription",
+        element: <SubscriptionPlans />,
+      },
+      {
+        path: "company/settings",
+        element:<MyBusiness/>
+      },
+      {
+        path: "company/users",  
+        element:<PermissionsAndRoles/>
+      },
+      {
+        path: "user-management",
+        element: <UserManagement />,
+      },
+      {
+        path: "user-management/:id",
+        element: <UserDetails />,
       },
       {
         path: "buy",
-        Component: Buy,
-        children: [
-          {
-            index: true,
-            Component: BuyDashboard,
-          },
-          // Purchase Orders routes
-          {
-            path: "purchase-orders",
-            children: [
-              {
-                index: true,
-                Component: PurchaseOrders,
-              },
-              {
-                path: "create",
-                Component: NewPurchaseOrder,
-              },
-              {
-                path: ":id",
-                Component: PurchaseOrderDetails,
-              },
-            ],
-          },
-        ],
+        element: <PurchaseOrders />,
+      },
+      {
+        path: "buy/:id",
+        element: <PurchaseOrderDetails />,
+      },
+      {
+        path: "sales",
+        element: <Sales />,
+      },
+      {
+        path: "crm",
+        element: <CRM />,
+      },
+      {
+        path: "accounting",
+        element: <Accounting />,
+      },
+      {
+        path: "accounting/chart-of-accounts",
+        element: <ChartOfAccountsConfig />,
+      },
+      {
+        path: "hr",
+        element: <HRDashboard />,
+      },
+      {
+        path: "hr/employees",
+        element: <EmployeeList />,
+      },
+      {
+        path: "hr/leaves",
+        element: <LeaveManagement />,
+      },
+      {
+        path: "quotations/:id/print",
+        element: <PrintQuotation />,
       },
     ],
   },
   {
-    path: "auth",
-    Component: Login,
-    children: [
-      {
-        index: true,
-        Component: Login,
-      },
-      {
-        path: "login",
-        Component: Login,
-      },
-      {
-        path: "signup",
-        Component: Signup,
-      },
-      {
-        path: "forgot-password",
-        Component: Forgotpassword,
-      },
-    ],
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "new-user",
+    element: <NewUser />,
   },
   {
     path: "*",
-    Component: NotFound,
+    element: <NotFound />,
   },
 ]);
-
-export default routes;

@@ -188,7 +188,7 @@ export default function PrintQuotation() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Print Controls - Hidden when printing */}
-      <div className="no-print max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="print:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <button
             onClick={() => navigate('/quotations')}
@@ -216,15 +216,15 @@ export default function PrintQuotation() {
         </div>
       </div>
 
-      {/* Quotation Content */}
-      <div ref={contentRef} className="max-w-[210mm] mx-auto bg-white shadow-sm print-only">
-        <div className="p-8">
+      {/* Quotation Content - Visible when printing */}
+      <div ref={contentRef} className="max-w-[210mm] mx-auto bg-white shadow-sm print:shadow-none print:max-w-none">
+        <div className="p-8 print:p-0">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-8 print:mb-4">
             <div className="flex justify-between items-start">
-              <div className="space-y-4">
+              <div className="space-y-4 print:space-y-2">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="text-2xl font-bold text-gray-900 print:text-xl">
                     Devis #{mockQuotation.quoteNumber}
                   </h1>
                   <p className="mt-2 text-sm text-gray-500">
@@ -236,7 +236,7 @@ export default function PrintQuotation() {
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <h2 className="text-lg font-semibold">Votre Entreprise</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 print:text-base">Votre Entreprise</h2>
                   <div className="text-sm text-gray-600">
                     <p className="font-medium">COMPTA PRO SARL</p>
                     <p>123 Avenue de l'Innovation</p>
@@ -256,9 +256,9 @@ export default function PrintQuotation() {
           </div>
 
           {/* Customer Info */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-4">Informations Client</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="mb-8 print:mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 print:text-base print:mb-2">Informations Client</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:gap-4">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Nom du client</p>
                 <p className="text-sm text-gray-900">{mockQuotation.customerName}</p>
@@ -271,51 +271,51 @@ export default function PrintQuotation() {
           </div>
 
           {/* Items */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-4">Articles</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+          <div className="mb-8 print:mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 print:text-base print:mb-2">Articles</h2>
+            <div className="overflow-x-auto print:overflow-visible">
+              <table className="min-w-full divide-y divide-gray-200 print:w-full">
+                <thead className="bg-gray-50 print:bg-white">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider print:w-1/3">
                       Description
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider print:w-1/6">
                       Quantité
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider print:w-1/6">
                       Prix unitaire
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider print:w-1/6">
                       Remise
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider print:w-1/6">
                       TVA
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider print:w-1/6">
                       Total
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {mockQuotation.items.map((item) => (
-                    <tr key={item.id} className="hover:bg-white">
-                      <td className="px-4 py-3 text-sm text-gray-900 whitespace-normal">
+                    <tr key={item.id} className="print:hover:bg-white">
+                      <td className="px-4 py-3 text-sm text-gray-900 print:whitespace-normal">
                         {item.description}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-sm text-gray-900 text-right print:whitespace-nowrap">
                         {item.quantity}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-sm text-gray-900 text-right print:whitespace-nowrap">
                         {item.unitPrice.toFixed(2)} {mockQuotation.currency}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-sm text-gray-900 text-right print:whitespace-nowrap">
                         {item.discount}%
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-sm text-gray-900 text-right print:whitespace-nowrap">
                         {item.taxRate}%
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-sm text-gray-900 text-right print:whitespace-nowrap">
                         {item.total.toFixed(2)} {mockQuotation.currency}
                       </td>
                     </tr>
@@ -326,7 +326,7 @@ export default function PrintQuotation() {
           </div>
 
           {/* Totals */}
-          <div className="mb-8">
+          <div className="mb-8 print:mb-4">
             <div className="flex justify-end">
               <div className="w-80 space-y-3">
                 <div className="flex justify-between text-sm">
@@ -367,14 +367,14 @@ export default function PrintQuotation() {
           </div>
 
           {/* Notes and Terms */}
-          <div className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="mb-8 print:mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 print:gap-4">
               <div>
-                <h3 className="text-lg font-semibold mb-4">Notes</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 print:text-base print:mb-2">Notes</h3>
                 <p className="text-sm text-gray-600 whitespace-pre-wrap">{mockQuotation.notes}</p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-4">Conditions</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 print:text-base print:mb-2">Conditions</h3>
                 <ul className="list-disc list-inside text-sm text-gray-600 space-y-2">
                   {mockQuotation.terms.map((term, index) => (
                     <li key={index}>{term}</li>
@@ -392,29 +392,12 @@ export default function PrintQuotation() {
           @media print {
             @page {
               size: A4;
-              margin: 20mm;
+              margin: 2cm;
             }
             body {
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
               font-family: 'Arial', sans-serif;
-              background: white;
-              margin: 0;
-              padding: 0;
-            }
-            .no-print {
-              display: none !important;
-            }
-            .print-only {
-              display: block !important;
-              width: 100% !important;
-              max-width: none !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              box-shadow: none !important;
-            }
-            .print-only > div {
-              padding: 0 !important;
             }
             .print\\:text-base {
               font-size: 12pt;

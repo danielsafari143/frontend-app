@@ -35,6 +35,8 @@ import {
   FileType,
   ChevronLeft,
   ChevronRight,
+  Brain,
+  Calendar,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -148,6 +150,12 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/accounting/chart-of-accounts" className={navItemClasses("/accounting/chart-of-accounts")}>
+                    <BookOpen size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Plan Comptable</span>}
+                  </Link>
+                </li>
+                <li>
                   <Link to="/tax" className={navItemClasses("/tax")}>
                     <Landmark size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Fiscalité</span>}
@@ -157,6 +165,18 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   <Link to="/hr" className={navItemClasses("/hr")}>
                     <UserCog size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Ressources Humaines</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/hr/employees" className={navItemClasses("/hr/employees")}>
+                    <Users size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Employés</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/hr/leaves" className={navItemClasses("/hr/leaves")}>
+                    <Calendar size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Gestion des Congés</span>}
                   </Link>
                 </li>
                 <li>
@@ -174,12 +194,6 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                 Outils et Opérations
               </h3>
               <ul className="space-y-1 px-2">
-                <li>
-                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-all duration-200">
-                    <Search size={20} className="flex-shrink-0" />
-                    {!isCollapsed && <span className="text-sm">Recherche globale</span>}
-                  </button>
-                </li>
                 <li>
                   <Link to="/reports" className={navItemClasses("/reports")}>
                     <FileText size={20} className="flex-shrink-0" />
@@ -271,6 +285,21 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   <Link to="/assistant" className={navItemClasses("/assistant")}>
                     <Lightbulb size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Assistant intelligent</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/accountant-copilot" 
+                    className={navItemClasses("/accountant-copilot")}
+                    title="Assistant IA spécialisé en comptabilité OHADA"
+                  >
+                    <Brain size={20} className="flex-shrink-0" />
+                    {!isCollapsed && (
+                      <div className="flex flex-col">
+                        <span className="text-sm">Copilote Comptable</span>
+                        <span className="text-xs text-gray-500">IA OHADA</span>
+                      </div>
+                    )}
                   </Link>
                 </li>
                 <li>

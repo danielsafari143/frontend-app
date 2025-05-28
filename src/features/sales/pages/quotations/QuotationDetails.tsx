@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import {
   ArrowLeft,
@@ -12,7 +12,12 @@ import {
   FileText,
   Edit,
   Trash2,
+  Mail,
+  MessageCircle,
+  X,
 } from 'lucide-react';
+import SendQuotationModal from '../../components/SendQuotationModal';
+import { generateQuotationPDF } from '../../components/GenerateQuotationPDF';
 
 interface QuotationDetails {
   id: string;
@@ -107,6 +112,13 @@ const mockQuotation: QuotationDetails = {
 export default function QuotationDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [showSendModal, setShowSendModal] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState<'email' | 'whatsapp' | null>(null);
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const getStatusColor = (status: QuotationDetails['status']) => {
     switch (status) {
@@ -146,20 +158,88 @@ export default function QuotationDetails() {
     navigate(`/quotations/${id}/print`);
   };
 
-  const handleDownload = () => {
-    // Implement PDF download functionality
-    console.log('Download PDF');
+  const handleDownload = async () => {
+    try {
+      // Show loading state
+      const downloadButton = document.querySelector('[data-download-button]');
+      if (downloadButton) {
+        downloadButton.setAttribute('disabled', 'true');
+        downloadButton.innerHTML = 'Génération du PDF...';
+      }
+
+      await generateQuotationPDF({
+        contentRef,
+        quoteNumber: mockQuotation.quoteNumber,
+        onStart: () => {
+          // Button is already updated above
+        },
+        onComplete: () => {
+          // Reset button state
+          if (downloadButton) {
+            downloadButton.removeAttribute('disabled');
+            downloadButton.innerHTML = '<svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Télécharger';
+          }
+        },
+        onError: (error) => {
+          console.error('Error generating PDF:', error);
+          alert('Une erreur est survenue lors de la génération du PDF.');
+          // Reset button state
+          if (downloadButton) {
+            downloadButton.removeAttribute('disabled');
+            downloadButton.innerHTML = '<svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Télécharger';
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error in handleDownload:', error);
+      alert('Une erreur est survenue lors de la génération du PDF.');
+    }
   };
 
   const handleSend = () => {
-    // Implement send functionality
-    console.log('Send quotation');
+    setShowSendModal(true);
   };
+
+  const handleSendViaEmail = (email: string, message: string) => {
+    const subject = `Devis #${mockQuotation.quoteNumber}`;
+    const body = `Bonjour,\n\nVeuillez trouver ci-joint le devis #${mockQuotation.quoteNumber}.\n\nCordialement,\nCOMPTA PRO SARL${message ? `\n\nMessage personnalisé:\n${message}` : ''}`;
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setShowSendModal(false);
+  };
+
+  const handleSendViaWhatsApp = useCallback(async (phone: string, message: string) => {
+    try {
+      setIsGeneratingPDF(true);
+      
+      // Generate PDF using the shared component
+      await generateQuotationPDF({
+        contentRef,
+        quoteNumber: mockQuotation.quoteNumber,
+        onError: (error) => {
+          throw error; // Propagate error to be caught by the outer try-catch
+        }
+      });
+
+      // Create the message text
+      const text = `Bonjour,\n\nVeuillez trouver ci-joint le devis #${mockQuotation.quoteNumber}.\n\nCordialement,\nCOMPTA PRO SARL${message ? `\n\nMessage personnalisé:\n${message}` : ''}`;
+
+      // Open WhatsApp after PDF is generated
+      const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+      window.open(whatsappUrl, '_blank');
+      setShowSendModal(false);
+
+    } catch (error) {
+      console.error('Error sending via WhatsApp:', error);
+      alert('Une erreur est survenue lors de l\'envoi du devis');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-6">
+        <div className="space-y-6" ref={contentRef}>
           {/* Header with Actions */}
           <div className="flex justify-between items-center">
             <button
@@ -178,7 +258,8 @@ export default function QuotationDetails() {
               </button>
               <button
                 onClick={handleDownload}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                data-download-button
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Download className="h-5 w-5 mr-2" />
                 Télécharger
@@ -385,6 +466,16 @@ export default function QuotationDetails() {
           </div>
         </div>
       </div>
+
+      {/* Send Modal */}
+      <SendQuotationModal
+        isOpen={showSendModal}
+        onClose={() => setShowSendModal(false)}
+        onSendViaEmail={handleSendViaEmail}
+        onSendViaWhatsApp={handleSendViaWhatsApp}
+        isGeneratingPDF={isGeneratingPDF}
+        quoteNumber={mockQuotation.quoteNumber}
+      />
     </div>
   );
 } 
