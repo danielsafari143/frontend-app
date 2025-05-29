@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
-import Sidebar from '../../components/Sidebar';
-import Footer from '../../components/Footer';
+import Navbar from '../global-components/Navbar';
+import Sidebar from '../global-components/Sidebar';
+import Footer from '../global-components/Footer';
 
 export default function Layout() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

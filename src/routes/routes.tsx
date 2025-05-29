@@ -1,6 +1,5 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "../features/layout/Layout";
 import Dashboard from "../features/dashboard/Dashboard";
 import Settings from "../features/settings/Settings";
 import AccountantCopilot from "../features/accountant-copilot/AccountantCopilot";
@@ -25,6 +24,7 @@ import QuotationsList from "../features/sales/pages/quotations/QuotationsList";
 import QuotationDetails from "../features/sales/pages/quotations/QuotationDetails";
 import PermissionsAndRoles from "../features/settings/pages/PermissionsAndRoles";
 import MyBusiness from "../features/settings/pages/MyBusiness";
+import Layout from "../layout/Layout";
 
 export const router = createBrowserRouter([
   {

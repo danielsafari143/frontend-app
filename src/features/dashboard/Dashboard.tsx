@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
 import {
   Users,
@@ -7,71 +6,18 @@ import {
   ShoppingCart,
   DollarSign,
   BarChart3,
-  Settings,
-  MessageSquare,
-  Calendar,
-  Bell,
-  Search,
-  Menu,
-  X,
-  ChevronDown,
-  User,
-  LogOut,
-  HelpCircle,
-  Sun,
-  Moon,
-  Plus,
   ArrowUpRight,
   ArrowDownRight,
-  TrendingUp,
-  TrendingDown,
   MoreHorizontal,
   Clock,
-  CheckCircle2,
-  AlertCircle,
-  XCircle,
   Filter,
   Download,
-  Eye,
-  Edit,
-  Trash2,
   ChevronRight,
-  ChevronLeft,
-  ChevronsLeft,
-  ChevronsRight,
-  FileSpreadsheet,
-  File,
-  FileCheck,
-  FileX,
-  FilePlus,
-  FileMinus,
-  FileSearch,
-  FileEdit,
-  FileArchive,
-  FileBarChart,
-  FilePieChart,
-  FileLineChart,
-  Building2,
-  Wallet,
-  Receipt,
-  CreditCard,
-  Briefcase,
-  Landmark,
-  Banknote,
-  PieChart,
-  LineChart,
-  BarChart2,
-  AlertTriangle,
   Building,
-  PiggyBank
 } from "lucide-react";
 import {
   AreaChart,
   Area,
-  BarChart,
-  Bar,
-  LineChart as RechartsLineChart,
-  Line,
   PieChart as RechartsPieChart,
   Pie,
   Cell,
@@ -81,26 +27,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  RadialBarChart,
-  RadialBar
 } from 'recharts';
-
-interface MetricCard {
-  title: string;
-  value: string | number;
-  change: string;
-  trend: 'up' | 'down';
-  icon: React.ReactNode;
-  subtitle: string;
-}
-
-interface RecentActivity {
-  type: string;
-  title: string;
-  description: string;
-  date: string;
-  status?: 'success' | 'warning' | 'error';
-}
+import { MetricCard, RecentActivity } from "./types/types";
 
 const metrics: MetricCard[] = [
   {
