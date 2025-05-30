@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import {
   Home,
   FileText,
@@ -22,6 +22,7 @@ import {
   Search,
   History,
   FileSpreadsheet,
+  Building,
   CreditCard,
   HelpCircle,
   BookOpen,
@@ -37,36 +38,12 @@ import {
   Brain,
   Calendar,
   GitBranch,
-  ArrowUpDown,
-  LayoutDashboard,
-  Tag,
+  ArrowUpDown
 } from "lucide-react";
 
 interface SidebarProps {
   onCollapse: (collapsed: boolean) => void;
 }
-
-const navigation = [
-  { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Clients', href: '/clients', icon: Users },
-  { name: 'Entreprises', href: '/companies', icon: Building2 },
-  { name: 'Factures', href: '/invoices', icon: FileText },
-  { name: 'Ventes', href: '/sales', icon: ShoppingCart },
-  { name: 'Achats', href: '/buy', icon: ShoppingBag },
-  { name: 'Gestion des Stocks', href: '/inventory', icon: Package },
-  { name: 'CRM', href: '/crm', icon: UserCircle },
-  { name: 'Comptabilité', href: '/accounting', icon: Calculator },
-  { name: 'Plan Comptable', href: '/accounting/chart-of-accounts', icon: BookOpen },
-  { name: 'Fiscalité', href: '/fiscalites', icon: Landmark },
-  { name: 'Ressources Humaines', href: '/hr', icon: UserCog },
-  { name: 'Employés', href: '/hr/employees', icon: Users },
-  { name: 'Gestion des Congés', href: '/hr/leaves', icon: Calendar },
-  { name: 'Finance & Trésorerie', href: '/finance', icon: Wallet },
-  { name: 'Trésorerie', href: '/finance/treasury', icon: Landmark },
-  { name: 'Flux de Trésorerie', href: '/finance/cash-flow', icon: ArrowUpDown },
-  { name: 'Budgets & Prévisions', href: '/finance/budgeting', icon: FileSpreadsheet },
-  { name: 'Paramètres', href: '/settings', icon: Settings },
-];
 
 export default function Sidebar({ onCollapse }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
@@ -132,28 +109,108 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                 Navigation Principale
               </h3>
               <ul className="space-y-1 px-2">
-                {navigation.map((item) => {
-                  return (
-                    <li key={item.name}>
-                      <Link
-                        to={item.href}
-                        className={`group flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
-                          isActive(item.href)
-                            ? 'bg-blue-50 text-blue-700 font-medium'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        <item.icon
-                          className={`flex-shrink-0 ${
-                            isActive(item.href) ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500'
-                          }`}
-                          aria-hidden="true"
-                        />
-                        {!isCollapsed && <span className="text-sm">{item.name}</span>}
-                      </Link>
-                    </li>
-                  );
-                })}
+                <li>
+                  <Link to="/dashboard" className={navItemClasses("/dashboard")}>
+                    <BarChart3 size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Dashboard</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/settings/workflows" className={navItemClasses("/settings/workflows")}>
+                    <GitBranch size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Workflows</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/sales" className={navItemClasses("/sales")}>
+                    <ShoppingCart size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Ventes</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/buy" className={navItemClasses("/buy")}>
+                    <ShoppingBag size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Achats</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/inventory" className={navItemClasses("/inventory")}>
+                    <Package size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Gestion des Stocks</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/invoices" className={navItemClasses("/invoices")}>
+                    <Receipt size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Factures & Devis</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/crm" className={navItemClasses("/crm")}>
+                    <UserCircle size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">CRM</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/accounting" className={navItemClasses("/accounting")}>
+                    <Calculator size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Comptabilité</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/accounting/chart-of-accounts" className={navItemClasses("/accounting/chart-of-accounts")}>
+                    <BookOpen size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Plan Comptable</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/fiscalites" className={navItemClasses("/fiscalites")}>
+                    <Landmark size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Fiscalité</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/hr" className={navItemClasses("/hr")}>
+                    <UserCog size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Ressources Humaines</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/hr/employees" className={navItemClasses("/hr/employees")}>
+                    <Users size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Employés</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/hr/leaves" className={navItemClasses("/hr/leaves")}>
+                    <Calendar size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Gestion des Congés</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/finance" className={navItemClasses("/finance")}>
+                    <Wallet size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Finance & Trésorerie</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/finance/treasury" className={navItemClasses("/finance/treasury")}>
+                    <Landmark size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Trésorerie</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/finance/cash-flow" className={navItemClasses("/finance/cash-flow")}>
+                    <ArrowUpDown size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Flux de Trésorerie</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/finance/budgeting" className={navItemClasses("/finance/budgeting")}>
+                    <FileSpreadsheet size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Budgets & Prévisions</span>}
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -186,7 +243,7 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
               <ul className="space-y-1 px-2">
                 <li>
                   <Link to="/company/settings" className={navItemClasses("/company/settings")}>
-                    <Building2 size={20} className="flex-shrink-0" />
+                    <Building size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Mon Entreprise</span>}
                   </Link>
                 </li>
