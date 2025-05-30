@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, ArrowLeft } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import authService from '../../../services/auth.service';
 
 interface FormErrors {
-  email?: string;
+  password?: string;
+  confirmPassword?: string;
   general?: string;
 }
 
@@ -26,10 +27,18 @@ const errorVariants = {
   exit: { opacity: 0, y: -10 }
 };
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    password: '',
+    confirmPassword: '',
+  });
   const [errors, setErrors] = useState<FormErrors>({});
   const [success, setSuccess] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -37,10 +46,16 @@ export default function ForgotPassword() {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!email) {
-      newErrors.email = 'L\'email est requis';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'L\'email n\'est pas valide';
+    if (!formData.password) {
+      newErrors.password = 'Le mot de passe est requis';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'La confirmation du mot de passe est requise';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
     }
 
     setErrors(newErrors);
@@ -50,7 +65,7 @@ export default function ForgotPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
+    if (!validateForm() || !token) {
       return;
     }
 
@@ -58,7 +73,7 @@ export default function ForgotPassword() {
     setErrors({});
 
     try {
-      await authService.forgotPassword(email);
+      await authService.resetPassword(token, formData.password);
       setSuccess(true);
     } catch (error) {
       setErrors({
@@ -68,6 +83,32 @@ export default function ForgotPassword() {
       setIsLoading(false);
     }
   };
+
+  if (!token) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl text-center"
+        >
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-600 px-4 py-3 rounded relative mb-6">
+            <p>Lien de réinitialisation invalide ou expiré.</p>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => navigate('/auth/forgot-password')}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Demander un nouveau lien
+          </motion.button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -101,7 +142,7 @@ export default function ForgotPassword() {
             Réinitialisation du mot de passe
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Entrez votre adresse email pour recevoir un lien de réinitialisation
+            Entrez votre nouveau mot de passe
           </p>
         </motion.div>
 
@@ -127,7 +168,7 @@ export default function ForgotPassword() {
             className="text-center"
           >
             <div className="bg-green-50 border-l-4 border-green-500 text-green-600 px-4 py-3 rounded relative mb-6">
-              <p>Un email de réinitialisation a été envoyé à votre adresse email.</p>
+              <p>Votre mot de passe a été réinitialisé avec succès.</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -147,41 +188,57 @@ export default function ForgotPassword() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <div>
+            <div className="space-y-5">
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Adresse email
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                  Nouveau mot de passe
                 </label>
                 <motion.div 
                   className="relative"
                   variants={inputVariants}
-                  animate={focusedField === 'email' ? 'focus' : 'blur'}
+                  animate={focusedField === 'password' ? 'focus' : 'blur'}
                 >
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className={`h-5 w-5 ${focusedField === 'email' ? 'text-blue-500' : 'text-gray-400'} transition-colors duration-200`} />
+                    <Lock className={`h-5 w-5 ${focusedField === 'password' ? 'text-blue-500' : 'text-gray-400'} transition-colors duration-200`} />
                   </div>
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
                     required
-                    onFocus={() => setFocusedField('email')}
+                    onFocus={() => setFocusedField('password')}
                     onBlur={() => setFocusedField(null)}
                     className={`appearance-none rounded-lg relative block w-full px-3 py-3 pl-10 border ${
-                      errors.email ? 'border-red-300' : focusedField === 'email' ? 'border-blue-500' : 'border-gray-300'
+                      errors.password ? 'border-red-300' : focusedField === 'password' ? 'border-blue-500' : 'border-gray-300'
                     } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                    placeholder="exemple@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   />
+                  <motion.div 
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <button
+                      type="button"
+                      className="text-gray-400 hover:text-gray-500"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </motion.div>
                 </motion.div>
                 <AnimatePresence>
-                  {errors.email && (
+                  {errors.password && (
                     <motion.p
                       variants={errorVariants}
                       initial="initial"
@@ -189,7 +246,70 @@ export default function ForgotPassword() {
                       exit="exit"
                       className="mt-1 text-sm text-red-600"
                     >
-                      {errors.email}
+                      {errors.password}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirmer le mot de passe
+                </label>
+                <motion.div 
+                  className="relative"
+                  variants={inputVariants}
+                  animate={focusedField === 'confirmPassword' ? 'focus' : 'blur'}
+                >
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className={`h-5 w-5 ${focusedField === 'confirmPassword' ? 'text-blue-500' : 'text-gray-400'} transition-colors duration-200`} />
+                  </div>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    onFocus={() => setFocusedField('confirmPassword')}
+                    onBlur={() => setFocusedField(null)}
+                    className={`appearance-none rounded-lg relative block w-full px-3 py-3 pl-10 border ${
+                      errors.confirmPassword ? 'border-red-300' : focusedField === 'confirmPassword' ? 'border-blue-500' : 'border-gray-300'
+                    } placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  />
+                  <motion.div 
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <button
+                      type="button"
+                      className="text-gray-400 hover:text-gray-500"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </motion.div>
+                </motion.div>
+                <AnimatePresence>
+                  {errors.confirmPassword && (
+                    <motion.p
+                      variants={errorVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      className="mt-1 text-sm text-red-600"
+                    >
+                      {errors.confirmPassword}
                     </motion.p>
                   )}
                 </AnimatePresence>
@@ -223,10 +343,10 @@ export default function ForgotPassword() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Envoi en cours...
+                    Réinitialisation en cours...
                   </span>
                 ) : (
-                  'Envoyer le lien'
+                  'Réinitialiser le mot de passe'
                 )}
               </motion.button>
             </div>

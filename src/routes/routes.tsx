@@ -19,8 +19,8 @@ import Accounting from "../features/accounting/Accounting";
 import HRDashboard from "../features/hr/pages/HRDashboard";
 import EmployeeList from "../features/hr/pages/EmployeeList";
 import LeaveManagement from "../features/hr/pages/LeaveManagement";
-import Login from "../features/auth/Login";
-import NewUser from "../features/auth/NewUser";
+import Login from "../features/auth/pages/Login";
+import NewUser from "../features/auth/pages/Register";
 import PrintQuotation from "../features/sales/pages/quotations/PrintQuotation";
 import ChartOfAccountsConfig from "../features/accounting/pages/ChartOfAccountsConfig";
 import NotFound from "../features/error/NotFound";
@@ -150,6 +150,7 @@ import NewPayment from "../features/fiscalites/pages/NewPayment";
 import PaymentDetails from "../features/fiscalites/pages/PaymentDetails";
 import TaxReminders from "../features/fiscalites/pages/TaxReminders";
 import TaxCompliance from "../features/fiscalites/pages/TaxCompliance";
+import ForgotPassword from "../features/auth/pages/ForgotPassword";
 
 export const router = createBrowserRouter([
   {
@@ -794,8 +795,13 @@ export const router = createBrowserRouter([
     path: "login",
     element: <Login />,
   },
+
   {
-    path: "new-user",
+    path: "auth/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "auth/register",
     element: <NewUser />,
   },
   {
