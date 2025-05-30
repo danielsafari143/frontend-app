@@ -153,6 +153,9 @@ import PaymentDetails from "../features/fiscalites/pages/PaymentDetails";
 import TaxReminders from "../features/fiscalites/pages/TaxReminders";
 import TaxCompliance from "../features/fiscalites/pages/TaxCompliance";
 import ForgotPassword from "../features/auth/pages/ForgotPassword";
+import ProductList from "../features/products/pages/ProductList";
+import NewProduct from "../features/products/pages/NewProduct";
+import EditProduct from "../features/products/pages/EditProduct";
 
 export const router = createBrowserRouter([
   {
@@ -798,6 +801,18 @@ export const router = createBrowserRouter([
             element: <TaxSettings />,
           },
         ],
+      },
+      {
+        path: "products",
+        element: <ProductList />,
+      },
+      {
+        path: "products/new",
+        element: <NewProduct />,
+      },
+      {
+        path: "products/:id/edit",
+        element: <EditProduct />,
       },
     ],
   },
