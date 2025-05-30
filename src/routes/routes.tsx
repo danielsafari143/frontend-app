@@ -12,6 +12,9 @@ import PurchaseOrderDetails from "../features/purchase/PurchaseOrderDetails";
 import PurchaseDashboard from "../features/purchase/PurchaseDashboard";
 import Sales from "../features/sales/Sales";
 import CRM from "../features/crm/CRM";
+import Tasks from "../features/crm/pages/Tasks";
+import TasksDashboard from "../features/crm/pages/TasksDashboard";
+import CRMDashboard from "../features/crm/pages/Dashboard";
 import Accounting from "../features/accounting/Accounting";
 import HRDashboard from "../features/hr/pages/HRDashboard";
 import EmployeeList from "../features/hr/pages/EmployeeList";
@@ -30,6 +33,10 @@ import WorkflowConfig from "../features/settings/pages/WorkflowConfig";
 import NewWorkflow from "../features/settings/pages/NewWorkflow";
 import Layout from "../layout/Layout";
 import SalesDashboard from '../features/sales/pages/Dashboard';
+import Inventory from '../features/inventory/Inventory';
+import InventoryDashboard from "../features/inventory/pages/InventoryDashboard";
+import Invoices from '../features/invoices/Invoices';
+import InvoicesDashboard from '../features/invoices/pages/Dashboard';
 
 export const router = createBrowserRouter([
   {
@@ -131,6 +138,18 @@ export const router = createBrowserRouter([
         element: <CRM />,
       },
       {
+        path: "crm/dashboard",
+        element: <CRMDashboard />,
+      },
+      {
+        path: "crm/tasks",
+        element: <Tasks />,
+      },
+      {
+        path: "crm/tasks/dashboard",
+        element: <TasksDashboard />,
+      },
+      {
         path: "accounting",
         element: <Accounting />,
       },
@@ -157,6 +176,22 @@ export const router = createBrowserRouter([
       {
         path: "sales/dashboard",
         element: <SalesDashboard />,
+      },
+      {
+        path: "inventory",
+        element: <Inventory />,
+      },
+      {
+        path: "inventory/dashboard",
+        element: <InventoryDashboard/>,
+      },
+      {
+        path: '/invoices',
+        element: <Invoices />,
+      },
+      {
+        path: '/invoices/dashboard',
+        element: <InvoicesDashboard />,
       },
     ],
   },

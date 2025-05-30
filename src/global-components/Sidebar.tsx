@@ -133,7 +133,7 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/stock" className={navItemClasses("/stock")}>
+                  <Link to="/inventory" className={navItemClasses("/inventory")}>
                     <Package size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Gestion des Stocks</span>}
                   </Link>

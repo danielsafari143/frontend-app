@@ -3,326 +3,288 @@ import {
   Users, Building2, UserPlus, Activity, Plus, Search, 
   Filter, Bell, FileText, Mail, Phone, MapPin, 
   Calendar, Clock, ArrowUpRight, ArrowDownRight,
-  FileCheck, AlertCircle
+  FileCheck, AlertCircle, BarChart3, ChevronDown, ChevronUp,
+  UserCog, Building, PhoneCall, Mail as MailIcon, FileSignature
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+interface WorkflowStep {
+  id: number;
+  title: string;
+  role: string;
+  description: string;
+}
+
+interface WorkflowTemplate {
+  id: string;
+  title: string;
+  description: string;
+  steps: WorkflowStep[];
+  color: string;
+  icon: React.ElementType;
+}
+
 export default function CRM() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedWorkflow, setExpandedWorkflow] = useState<string | null>(null);
 
-  // Stats data
-  const stats = [
+  // Workflow templates
+  const workflowTemplates: WorkflowTemplate[] = [
     {
-      label: 'Clients',
-      value: 156,
-      change: '+12%',
-      trend: 'up',
-      icon: <Users className="w-5 h-5 text-blue-500" />,
-      detail: 'Dont 142 actifs'
+      id: '1',
+      title: 'Processus d\'onboarding client',
+      description: 'Processus standard pour l\'intégration de nouveaux clients',
+      color: 'bg-blue-500',
+      icon: UserCog,
+      steps: [
+        {
+          id: 1,
+          title: 'Collecte des informations',
+          role: 'Commercial',
+          description: 'Récupération des informations de base du client'
+        },
+        {
+          id: 2,
+          title: 'Vérification des documents',
+          role: 'Administration',
+          description: 'Validation des documents légaux et administratifs'
+        },
+        {
+          id: 3,
+          title: 'Configuration du compte',
+          role: 'IT',
+          description: 'Création et configuration du compte client'
+        },
+        {
+          id: 4,
+          title: 'Formation initiale',
+          role: 'Support',
+          description: 'Formation du client sur l\'utilisation de la plateforme'
+        }
+      ]
     },
     {
-      label: 'Fournisseurs',
-      value: 89,
-      change: '+5%',
-      trend: 'up',
-      icon: <Building2 className="w-5 h-5 text-green-500" />,
-      detail: 'Dont 82 actifs'
-    },
-    {
-      label: 'Contacts',
-      value: 423,
-      change: '+8%',
-      trend: 'up',
-      icon: <UserPlus className="w-5 h-5 text-purple-500" />,
-      detail: 'Dont 398 actifs'
-    },
-    {
-      label: 'Documents',
-      value: 1.2,
-      change: '+15%',
-      trend: 'up',
-      icon: <FileText className="w-5 h-5 text-orange-500" />,
-      detail: 'K documents'
-    },
-    {
-      label: 'Tâches en Attente',
-      value: 23,
-      change: '-5%',
-      trend: 'down',
-      icon: <AlertCircle className="w-5 h-5 text-red-500" />,
-      detail: 'Dont 8 prioritaires'
+      id: '2',
+      title: 'Processus de gestion des fournisseurs',
+      description: 'Processus standard pour la gestion des relations fournisseurs',
+      color: 'bg-green-500',
+      icon: Building,
+      steps: [
+        {
+          id: 1,
+          title: 'Évaluation initiale',
+          role: 'Achats',
+          description: 'Analyse des capacités et de la fiabilité du fournisseur'
+        },
+        {
+          id: 2,
+          title: 'Négociation des termes',
+          role: 'Commercial',
+          description: 'Négociation des conditions commerciales et de paiement'
+        },
+        {
+          id: 3,
+          title: 'Validation contractuelle',
+          role: 'Juridique',
+          description: 'Révision et validation des contrats'
+        },
+        {
+          id: 4,
+          title: 'Intégration',
+          role: 'Administration',
+          description: 'Enregistrement et configuration dans le système'
+        }
+      ]
     }
   ];
 
-  // Mock data for demonstration
-  const recentCustomers = [
+  // Main sections
+  const sections = [
     {
-      id: '1',
-      name: 'Entreprise ABC',
-      email: 'contact@abc.com',
-      phone: '+33 1 23 45 67 89',
-      status: 'active',
-      creditLimit: 50000,
-      lastActivity: '2024-03-20',
-      paymentTerms: '30 jours'
+      title: 'Clients',
+      description: 'Gestion des clients et de leurs informations',
+      link: '/crm/customers',
+      icon: Users,
+      color: 'bg-blue-500',
+      stats: '156 clients actifs'
     },
     {
-      id: '2',
-      name: 'Société XYZ',
-      email: 'info@xyz.com',
-      phone: '+33 1 98 76 54 32',
-      status: 'active',
-      creditLimit: 75000,
-      lastActivity: '2024-03-19',
-      paymentTerms: '45 jours'
-    },
-    // Add more mock customers...
-  ];
-
-  const recentActivities = [
-    {
-      id: '1',
-      type: 'customer',
-      action: 'created',
-      entityName: 'Entreprise ABC',
-      user: 'John Doe',
-      timestamp: '2024-03-20 14:30',
-      details: 'Nouveau client ajouté'
+      title: 'Fournisseurs',
+      description: 'Gestion des fournisseurs et des relations',
+      link: '/crm/suppliers',
+      icon: Building2,
+      color: 'bg-green-500',
+      stats: '89 fournisseurs actifs'
     },
     {
-      id: '2',
-      type: 'supplier',
-      action: 'updated',
-      entityName: 'Fournisseur XYZ',
-      user: 'Jane Smith',
-      timestamp: '2024-03-20 13:15',
-      details: 'Mise à jour des conditions de paiement'
-    },
-    // Add more mock activities...
-  ];
-
-  const upcomingTasks = [
-    {
-      id: '1',
-      title: 'Suivi paiement client ABC',
-      dueDate: '2024-03-25',
-      priority: 'high',
-      status: 'pending'
+      title: 'Contacts',
+      description: 'Gestion des contacts et des interactions',
+      link: '/crm/contacts',
+      icon: UserPlus,
+      color: 'bg-purple-500',
+      stats: '423 contacts'
     },
     {
-      id: '2',
-      title: 'Renouvellement contrat XYZ',
-      dueDate: '2024-03-28',
-      priority: 'medium',
-      status: 'pending'
+      title: 'Appels',
+      description: 'Suivi des appels et des communications',
+      link: '/crm/calls',
+      icon: PhoneCall,
+      color: 'bg-orange-500',
+      stats: '45 appels ce mois'
     },
-    // Add more mock tasks...
+    {
+      title: 'Emails',
+      description: 'Gestion des communications par email',
+      link: '/crm/emails',
+      icon: MailIcon,
+      color: 'bg-red-500',
+      stats: '156 emails envoyés'
+    },
+    {
+      title: 'Documents',
+      description: 'Gestion des documents et contrats',
+      link: '/crm/documents',
+      icon: FileSignature,
+      color: 'bg-yellow-500',
+      stats: '1.2K documents'
+    }
   ];
 
   return (
     <div className="p-6 space-y-8">
-      {/* Header & Quick Actions */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Users className="w-7 h-7 text-blue-600" />
-            CRM Dashboard
+            CRM
           </h1>
           <p className="text-gray-500">Gestion de la relation client</p>
         </div>
         <div className="flex gap-2">
-          <Link to="/crm/customers/new" className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            <Plus className="w-4 h-4" /> Nouveau client
-          </Link>
-          <Link to="/crm/suppliers/new" className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-            <Plus className="w-4 h-4" /> Nouveau fournisseur
-          </Link>
-          <Link to="/crm/contacts/new" className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-            <Plus className="w-4 h-4" /> Nouveau contact
+          <Link to="/crm/dashboard" className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+            <BarChart3 className="w-4 h-4" /> Tableau de bord
           </Link>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-white rounded-xl border p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <div className="p-2 bg-gray-50 rounded-lg">
-                {stat.icon}
+      {/* Main Sections Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sections.map((section) => (
+          <Link
+            key={section.title}
+            to={section.link}
+            className="group bg-white rounded-xl border shadow-sm p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
+                  {section.title}
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">{section.description}</p>
+                <p className="mt-2 text-sm font-medium text-gray-900">{section.stats}</p>
               </div>
-              <span className={`flex items-center text-sm font-medium ${
-                stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {stat.trend === 'up' ? (
-                  <ArrowUpRight className="w-4 h-4 mr-1" />
-                ) : (
-                  <ArrowDownRight className="w-4 h-4 mr-1" />
-                )}
-                {stat.change}
-              </span>
+              <div className={`p-3 rounded-lg ${section.color} bg-opacity-10`}>
+                <section.icon className={`w-6 h-6 ${section.color.replace('bg-', 'text-')}`} />
+              </div>
             </div>
-            <div className="text-2xl font-bold mb-1">
-              {stat.value.toLocaleString('fr-FR')}
-            </div>
-            <div className="text-sm text-gray-500">{stat.label}</div>
-            <div className="text-xs text-gray-400 mt-1">{stat.detail}</div>
-          </div>
+          </Link>
         ))}
       </div>
 
-      {/* Search and Filter Bar */}
-      <div className="flex gap-4 items-center">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Rechercher clients, fournisseurs, contacts..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <button className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50">
-          <Filter className="w-5 h-5" />
-          Filtres
-        </button>
-      </div>
-
-      {/* Recent Customers Table */}
-      <div className="bg-white rounded-xl border shadow-sm">
-        <div className="p-6 border-b">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            <Users className="w-5 h-5 text-blue-500" />
-            Clients Récents
-          </h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Limite Crédit</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dernière Activité</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {recentCustomers.map((customer) => (
-                <tr key={customer.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-900">{customer.name}</div>
-                    <div className="text-sm text-gray-500">{customer.paymentTerms}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Mail className="w-4 h-4 text-gray-400" />
-                        {customer.email}
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Phone className="w-4 h-4 text-gray-400" />
-                        {customer.phone}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      customer.status === 'active' ? 'bg-green-100 text-green-800' : 
-                      customer.status === 'inactive' ? 'bg-yellow-100 text-yellow-800' : 
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {customer.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium">
-                      {customer.creditLimit.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Calendar className="w-4 h-4" />
-                      {customer.lastActivity}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <Link to={`/crm/customers/${customer.id}`} className="text-blue-600 hover:text-blue-800">
-                        Voir
-                      </Link>
-                      <Link to={`/crm/customers/${customer.id}/edit`} className="text-gray-600 hover:text-gray-800">
-                        Modifier
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Recent Activities & Upcoming Tasks */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Recent Activities */}
-        <div className="bg-white rounded-xl border shadow-sm">
-          <div className="p-6 border-b">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Activity className="w-5 h-5 text-orange-500" />
-              Activités Récentes
-            </h2>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium">{activity.entityName}</div>
-                      <div className="text-sm text-gray-500">{activity.timestamp}</div>
-                    </div>
-                    <div className="text-sm text-gray-600">{activity.details}</div>
-                    <div className="text-xs text-gray-500 mt-1">Par {activity.user}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Upcoming Tasks */}
-        <div className="bg-white rounded-xl border shadow-sm">
-          <div className="p-6 border-b">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-purple-500" />
-              Tâches à Venir
-            </h2>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {upcomingTasks.map((task) => (
-                <div key={task.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+      {/* Workflow Templates */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold text-gray-900">Modèles de processus</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {workflowTemplates.map((template) => (
+            <div key={template.id} className="bg-white rounded-xl border shadow-sm overflow-hidden">
+              <div className="p-6">
+                <div className="flex items-start justify-between">
                   <div>
-                    <div className="font-medium">{task.title}</div>
-                    <div className="text-sm text-gray-500">Échéance: {task.dueDate}</div>
+                    <h3 className="text-lg font-semibold text-gray-900">{template.title}</h3>
+                    <p className="mt-1 text-sm text-gray-500">{template.description}</p>
                   </div>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    task.priority === 'high' ? 'bg-red-100 text-red-800' :
-                    task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-green-100 text-green-800'
-                  }`}>
-                    {task.priority}
-                  </span>
+                  <div className={`p-3 rounded-lg ${template.color} bg-opacity-10`}>
+                    <template.icon className={`w-6 h-6 ${template.color.replace('bg-', 'text-')}`} />
+                  </div>
                 </div>
-              ))}
+                <button
+                  onClick={() => setExpandedWorkflow(expandedWorkflow === template.id ? null : template.id)}
+                  className="mt-4 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+                >
+                  {expandedWorkflow === template.id ? (
+                    <>
+                      <ChevronUp className="w-4 h-4" />
+                      Voir moins
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="w-4 h-4" />
+                      Voir les étapes
+                    </>
+                  )}
+                </button>
+                {expandedWorkflow === template.id && (
+                  <div className="mt-4 space-y-4">
+                    {template.steps.map((step) => (
+                      <div key={step.id} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-900">{step.title}</div>
+                          <div className="text-sm text-gray-500">{step.description}</div>
+                          <div className="mt-1 text-xs font-medium text-gray-600">
+                            Rôle: {step.role}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-white rounded-xl border shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link
+            to="/crm/customers/new"
+            className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+          >
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <UserCog className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">Nouveau client</div>
+              <div className="text-sm text-gray-500">Ajouter un nouveau client</div>
+            </div>
+          </Link>
+          <Link
+            to="/crm/suppliers/new"
+            className="flex items-center gap-3 p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+          >
+            <div className="p-2 bg-green-100 rounded-lg">
+              <Building className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">Nouveau fournisseur</div>
+              <div className="text-sm text-gray-500">Ajouter un nouveau fournisseur</div>
+            </div>
+          </Link>
+          <Link
+            to="/crm/contacts/new"
+            className="flex items-center gap-3 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+          >
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <UserPlus className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">Nouveau contact</div>
+              <div className="text-sm text-gray-500">Ajouter un nouveau contact</div>
+            </div>
+          </Link>
         </div>
       </div>
     </div>
