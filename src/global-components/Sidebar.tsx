@@ -37,6 +37,7 @@ import {
   ChevronRight,
   Brain,
   Calendar,
+  GitBranch
 } from "lucide-react";
 
 interface SidebarProps {
@@ -111,6 +112,12 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   <Link to="/dashboard" className={navItemClasses("/dashboard")}>
                     <BarChart3 size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Dashboard</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/settings/workflows" className={navItemClasses("/settings/workflows")}>
+                    <GitBranch size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Workflows</span>}
                   </Link>
                 </li>
                 <li>

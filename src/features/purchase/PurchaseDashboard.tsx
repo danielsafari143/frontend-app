@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Users,
-  FileText,
-  ShoppingCart,
+  Package,
   DollarSign,
   BarChart3,
   ArrowUpRight,
@@ -14,6 +12,7 @@ import {
   Download,
   ChevronRight,
   Building,
+  ShoppingCart,
 } from "lucide-react";
 import {
   AreaChart,
@@ -28,148 +27,168 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { MetricCard, RecentActivity } from "./types/types";
+
+interface MetricCard {
+  title: string;
+  value: string;
+  change: string;
+  trend: 'up' | 'down';
+  icon: React.ReactNode;
+  subtitle: string;
+}
+
+interface RecentActivity {
+  type: 'purchase' | 'stock' | 'invoice' | 'supplier';
+  title: string;
+  description: string;
+  date: string;
+  status: 'success' | 'warning' | 'error';
+}
 
 const metrics: MetricCard[] = [
   {
-    title: 'Chiffre d\'affaires',
-    value: '€125,430',
-    change: '+12.5%',
+    title: 'Dépenses totales',
+    value: '€45,230',
+    change: '+8.5%',
     trend: 'up',
     icon: <DollarSign className="w-6 h-6" />,
     subtitle: 'Ce mois'
   },
   {
-    title: 'Clients actifs',
-    value: '248',
-    change: '+8.2%',
+    title: 'Fournisseurs actifs',
+    value: '32',
+    change: '+2.1%',
     trend: 'up',
-    icon: <Users className="w-6 h-6" />,
+    icon: <Building className="w-6 h-6" />,
     subtitle: 'Total'
   },
   {
     title: 'Commandes en cours',
-    value: '45',
-    change: '-3.1%',
+    value: '15',
+    change: '-5.1%',
     trend: 'down',
     icon: <ShoppingCart className="w-6 h-6" />,
     subtitle: 'En attente'
   },
   {
-    title: 'Stock disponible',
-    value: '1,234',
-    change: '+5.7%',
+    title: 'Articles commandés',
+    value: '234',
+    change: '+12.7%',
     trend: 'up',
-    icon: <FileText className="w-6 h-6" />,
-    subtitle: 'Unités'
+    icon: <Package className="w-6 h-6" />,
+    subtitle: 'Ce mois'
   }
 ];
 
 const recentActivities: RecentActivity[] = [
   {
-    type: 'vente',
+    type: 'purchase',
     title: 'Nouvelle commande',
-    description: 'Commande #12345 de Jean Dupont',
+    description: 'Commande #PO-001 de Fournisseur A',
     date: 'Il y a 5 minutes',
     status: 'success'
   },
   {
     type: 'stock',
-    title: 'Alerte stock',
-    description: 'Stock faible pour le produit XYZ',
+    title: 'Réception de stock',
+    description: 'Réception de 50 unités de Produit XYZ',
     date: 'Il y a 1 heure',
+    status: 'success'
+  },
+  {
+    type: 'invoice',
+    title: 'Facture fournisseur',
+    description: 'Facture #F-7890 en attente de paiement',
+    date: 'Il y a 2 heures',
     status: 'warning'
   },
   {
-    type: 'facture',
-    title: 'Facture impayée',
-    description: 'Facture #7890 en retard de paiement',
-    date: 'Il y a 2 heures',
-    status: 'error'
-  },
-  {
-    type: 'client',
-    title: 'Nouveau client',
-    description: 'Marie Martin a créé un compte',
+    type: 'supplier',
+    title: 'Nouveau fournisseur',
+    description: 'Fournisseur D a été ajouté',
     date: 'Il y a 3 heures',
     status: 'success'
   }
 ];
 
-const quickActions = [
+// Purchase data for charts
+const purchaseData = [
+  { month: 'Jan', purchases: 4000, expenses: 2400, savings: 1600, target: 3500 },
+  { month: 'Fév', purchases: 3000, expenses: 1398, savings: 1602, target: 3500 },
+  { month: 'Mar', purchases: 2000, expenses: 9800, savings: -7800, target: 3500 },
+  { month: 'Avr', purchases: 2780, expenses: 3908, savings: -1128, target: 3500 },
+  { month: 'Mai', purchases: 1890, expenses: 4800, savings: -2910, target: 3500 },
+  { month: 'Juin', purchases: 2390, expenses: 3800, savings: -1410, target: 3500 },
+];
+
+// Supplier categories data
+const supplierData = [
+  { name: 'Matériel', value: 400, fill: '#0088FE' },
+  { name: 'Services', value: 300, fill: '#00C49F' },
+  { name: 'Équipement', value: 200, fill: '#FFBB28' },
+  { name: 'Logiciels', value: 100, fill: '#FF8042' },
+  { name: 'Autres', value: 150, fill: '#8884d8' }
+];
+
+// Recent purchase orders
+const recentPurchaseOrders = [
   {
-    title: 'Nouvelle vente',
-    icon: <ShoppingCart className="w-6 h-6" />,
-    path: '/sales/new'
+    id: "PO-001",
+    supplier: "Fournisseur A",
+    orderDate: "2024-03-15",
+    totalAmount: 1500.00,
+    status: "pending",
+    items: 5
   },
   {
-    title: 'Nouvelle facture',
-    icon: <FileText className="w-6 h-6" />,
-    path: '/invoices/new'
+    id: "PO-002",
+    supplier: "Fournisseur B",
+    orderDate: "2024-03-14",
+    totalAmount: 2300.50,
+    status: "approved",
+    items: 8
   },
   {
-    title: 'Gestion des stocks',
-    icon: <FileText className="w-6 h-6" />,
-    path: '/stock'
-  },
-  {
-    title: 'Clients',
-    icon: <Users className="w-6 h-6" />,
-    path: '/crm/customers'
+    id: "PO-003",
+    supplier: "Fournisseur C",
+    orderDate: "2024-03-13",
+    totalAmount: 950.75,
+    status: "received",
+    items: 3
   }
 ];
 
-// Enhanced financial data with more details
-const financialData = [
-  { month: 'Jan', revenue: 4000, expenses: 2400, profit: 1600, target: 3500 },
-  { month: 'Fév', revenue: 3000, expenses: 1398, profit: 1602, target: 3500 },
-  { month: 'Mar', revenue: 2000, expenses: 9800, profit: -7800, target: 3500 },
-  { month: 'Avr', revenue: 2780, expenses: 3908, profit: -1128, target: 3500 },
-  { month: 'Mai', revenue: 1890, expenses: 4800, profit: -2910, target: 3500 },
-  { month: 'Juin', revenue: 2390, expenses: 3800, profit: -1410, target: 3500 },
-];
-
-// Enhanced client data with more categories
-const clientData = [
-  { name: 'Particuliers', value: 400, fill: '#0088FE' },
-  { name: 'Entreprises', value: 300, fill: '#00C49F' },
-  { name: 'Gouvernement', value: 200, fill: '#FFBB28' },
-  { name: 'ONG', value: 100, fill: '#FF8042' },
-  { name: 'Éducation', value: 150, fill: '#8884d8' }
-];
-
-// Bank account data
-const bankAccounts = [
-  {
-    id: 1,
-    name: 'Compte Principal',
-    bank: 'BNP Paribas',
-    balance: 125430.50,
-    currency: 'EUR',
-    lastTransaction: '2024-03-15',
-    status: 'active'
-  },
-  {
-    id: 2,
-    name: 'Compte Épargne',
-    bank: 'Société Générale',
-    balance: 75000.00,
-    currency: 'EUR',
-    lastTransaction: '2024-03-10',
-    status: 'active'
-  },
-  {
-    id: 3,
-    name: 'Compte Pro',
-    bank: 'Crédit Agricole',
-    balance: 45000.75,
-    currency: 'EUR',
-    lastTransaction: '2024-03-14',
-    status: 'active'
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "pending":
+      return "bg-yellow-100 text-yellow-800";
+    case "approved":
+      return "bg-blue-100 text-blue-800";
+    case "received":
+      return "bg-green-100 text-green-800";
+    case "cancelled":
+      return "bg-red-100 text-red-800";
+    default:
+      return "bg-gray-100 text-gray-800";
   }
-];
+};
 
-export default function Dashboard() {
+const getStatusText = (status: string) => {
+  switch (status) {
+    case "pending":
+      return "En attente";
+    case "approved":
+      return "Approuvé";
+    case "received":
+      return "Reçu";
+    case "cancelled":
+      return "Annulé";
+    default:
+      return status;
+  }
+};
+
+export default function PurchaseDashboard() {
   return (
     <div className="space-y-6">
       {/* Header Section */}
@@ -179,10 +198,10 @@ export default function Dashboard() {
             <div className="p-2 bg-blue-50 rounded-lg">
               <BarChart3 className="w-8 h-8 text-blue-600" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Tableau de bord des achats</h1>
           </div>
           <p className="text-gray-600">
-            Vue d'ensemble de votre entreprise
+            Vue d'ensemble de vos achats et fournisseurs
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -219,40 +238,20 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {quickActions.map((action, index) => (
-          <Link
-            key={index}
-            to={action.path}
-            className="bg-white rounded-lg border border-gray-200 p-6 hover:border-blue-500 transition-colors"
-          >
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-blue-50 rounded-lg">
-                {action.icon}
-              </div>
-              <div>
-                <h3 className="font-medium text-gray-900">{action.title}</h3>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Financial Overview */}
+      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Évolution Financière</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Évolution des Achats</h3>
             <button className="text-gray-400 hover:text-gray-600">
               <MoreHorizontal className="w-5 h-5" />
             </button>
           </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={financialData}>
+              <AreaChart data={purchaseData}>
                 <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorPurchases" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
                     <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
                   </linearGradient>
@@ -260,7 +259,7 @@ export default function Dashboard() {
                     <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
                     <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
                   </linearGradient>
-                  <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorSavings" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#ffc658" stopOpacity={0.8}/>
                     <stop offset="95%" stopColor="#ffc658" stopOpacity={0}/>
                   </linearGradient>
@@ -279,12 +278,12 @@ export default function Dashboard() {
                 <Legend />
                 <Area 
                   type="monotone" 
-                  dataKey="revenue" 
+                  dataKey="purchases" 
                   stackId="1" 
                   stroke="#8884d8" 
                   fillOpacity={1} 
-                  fill="url(#colorRevenue)" 
-                  name="Revenus"
+                  fill="url(#colorPurchases)" 
+                  name="Achats"
                 />
                 <Area 
                   type="monotone" 
@@ -297,12 +296,12 @@ export default function Dashboard() {
                 />
                 <Area 
                   type="monotone" 
-                  dataKey="profit" 
+                  dataKey="savings" 
                   stackId="1" 
                   stroke="#ffc658" 
                   fillOpacity={1} 
-                  fill="url(#colorProfit)" 
-                  name="Profit"
+                  fill="url(#colorSavings)" 
+                  name="Économies"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -311,7 +310,7 @@ export default function Dashboard() {
 
         <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Répartition des Clients</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Répartition des Fournisseurs</h3>
             <button className="text-gray-400 hover:text-gray-600">
               <MoreHorizontal className="w-5 h-5" />
             </button>
@@ -320,7 +319,7 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <RechartsPieChart>
                 <Pie
-                  data={clientData}
+                  data={supplierData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -329,7 +328,7 @@ export default function Dashboard() {
                   dataKey="value"
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
-                  {clientData.map((entry, index) => (
+                  {supplierData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
@@ -348,40 +347,71 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Bank Accounts Section */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">Comptes Bancaires</h2>
-          <button className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1">
-            Voir tous les comptes
+      {/* Recent Purchase Orders Table */}
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900">Commandes récentes</h2>
+          <Link
+            to="/buy"
+            className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+          >
+            Voir toutes les commandes
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {bankAccounts.map((account) => (
-            <div key={account.id} className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                  <Building className="w-6 h-6 text-blue-600" />
-                </div>
-                <span className="text-sm font-medium text-green-600">Actif</span>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">{account.name}</h3>
-              <p className="text-sm text-gray-600 mb-4">{account.bank}</p>
-              <div className="flex items-baseline justify-between">
-                <div>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: account.currency }).format(account.balance)}
-                  </p>
-                  <p className="text-sm text-gray-500">Solde actuel</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-600">Dernière transaction</p>
-                  <p className="text-sm font-medium text-gray-900">{new Date(account.lastTransaction).toLocaleDateString('fr-FR')}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  N° Commande
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Fournisseur
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Montant
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Articles
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Statut
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {recentPurchaseOrders.map((order) => (
+                <tr key={order.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <Link to={`/buy/${order.id}`} className="text-blue-600 hover:text-blue-900">
+                      {order.id}
+                    </Link>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {order.supplier}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {order.orderDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {order.totalAmount.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {order.items}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                      {getStatusText(order.status)}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -404,10 +434,10 @@ export default function Dashboard() {
                     activity.status === 'warning' ? 'bg-yellow-50' :
                     'bg-red-50'
                   }`}>
-                    {activity.type === 'vente' && <ShoppingCart className="w-5 h-5 text-green-600" />}
-                    {activity.type === 'stock' && <FileText className="w-5 h-5 text-yellow-600" />}
-                    {activity.type === 'facture' && <FileText className="w-5 h-5 text-red-600" />}
-                    {activity.type === 'client' && <Users className="w-5 h-5 text-green-600" />}
+                    {activity.type === 'purchase' && <ShoppingCart className="w-5 h-5 text-green-600" />}
+                    {activity.type === 'stock' && <Package className="w-5 h-5 text-yellow-600" />}
+                    {activity.type === 'invoice' && <DollarSign className="w-5 h-5 text-red-600" />}
+                    {activity.type === 'supplier' && <Building className="w-5 h-5 text-green-600" />}
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">{activity.title}</p>
@@ -425,4 +455,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
+} 

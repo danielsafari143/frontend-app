@@ -6,8 +6,10 @@ import AccountantCopilot from "../features/accountant-copilot/AccountantCopilot"
 import SubscriptionPlans from "../features/subscription/SubscriptionPlans";
 import UserManagement from "../features/user-management/UserManagement";
 import UserDetails from "../features/user-management/UserDetails";
+import Purchase from "../features/purchase/Purchase";
 import PurchaseOrders from "../features/purchase/PurchaseOrders";
 import PurchaseOrderDetails from "../features/purchase/PurchaseOrderDetails";
+import PurchaseDashboard from "../features/purchase/PurchaseDashboard";
 import Sales from "../features/sales/Sales";
 import CRM from "../features/crm/CRM";
 import Accounting from "../features/accounting/Accounting";
@@ -24,7 +26,10 @@ import QuotationsList from "../features/sales/pages/quotations/QuotationsList";
 import QuotationDetails from "../features/sales/pages/quotations/QuotationDetails";
 import PermissionsAndRoles from "../features/settings/pages/PermissionsAndRoles";
 import MyBusiness from "../features/settings/pages/MyBusiness";
+import WorkflowConfig from "../features/settings/pages/WorkflowConfig";
+import NewWorkflow from "../features/settings/pages/NewWorkflow";
 import Layout from "../layout/Layout";
+import SalesDashboard from '../features/sales/pages/Dashboard';
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +51,14 @@ export const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings />,
+      },
+      {
+        path: "settings/workflows",
+        element: <WorkflowConfig />,
+      },
+      {
+        path: "settings/workflows/new",
+        element: <NewWorkflow />,
       },
       {
         path: "accountant-copilot",
@@ -71,14 +84,44 @@ export const router = createBrowserRouter([
         path: "user-management/:id",
         element: <UserDetails />,
       },
+      // Purchase routes
       {
         path: "buy",
+        element: <Purchase />,
+      },
+      {
+        path: "buy/dashboard",
+        element: <PurchaseDashboard />,
+      },
+      {
+        path: "buy/orders",
         element: <PurchaseOrders />,
       },
       {
-        path: "buy/:id",
+        path: "buy/orders/:id",
         element: <PurchaseOrderDetails />,
       },
+      {
+        path: "buy/suppliers",
+        element: <PurchaseOrders />, // TODO: Create Suppliers component
+      },
+      {
+        path: "buy/receptions",
+        element: <PurchaseOrders />, // TODO: Create Receptions component
+      },
+      {
+        path: "buy/invoices",
+        element: <PurchaseOrders />, // TODO: Create Invoices component
+      },
+      {
+        path: "buy/returns",
+        element: <PurchaseOrders />, // TODO: Create Returns component
+      },
+      {
+        path: "buy/prices",
+        element: <PurchaseOrders />, // TODO: Create Prices component
+      },
+      // End of Purchase routes
       {
         path: "sales",
         element: <Sales />,
@@ -110,6 +153,10 @@ export const router = createBrowserRouter([
       {
         path: "quotations/:id/print",
         element: <PrintQuotation />,
+      },
+      {
+        path: "sales/dashboard",
+        element: <SalesDashboard />,
       },
     ],
   },
