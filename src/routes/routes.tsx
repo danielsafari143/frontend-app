@@ -19,8 +19,8 @@ import Accounting from "../features/accounting/Accounting";
 import HRDashboard from "../features/hr/pages/HRDashboard";
 import EmployeeList from "../features/hr/pages/EmployeeList";
 import LeaveManagement from "../features/hr/pages/LeaveManagement";
-import Login from "../features/auth/pages/Login";
-import NewUser from "../features/auth/pages/Register";
+import Login from "../features/auth/Login";
+import NewUser from "../features/auth/NewUser";
 import PrintQuotation from "../features/sales/pages/quotations/PrintQuotation";
 import ChartOfAccountsConfig from "../features/accounting/pages/ChartOfAccountsConfig";
 import NotFound from "../features/error/NotFound";
@@ -151,9 +151,6 @@ import PaymentDetails from "../features/fiscalites/pages/PaymentDetails";
 import TaxReminders from "../features/fiscalites/pages/TaxReminders";
 import TaxCompliance from "../features/fiscalites/pages/TaxCompliance";
 import ForgotPassword from "../features/auth/pages/ForgotPassword";
-import ProductList from "../features/products/pages/ProductList";
-import NewProduct from "../features/products/pages/NewProduct";
-import EditProduct from "../features/products/pages/EditProduct";
 
 export const router = createBrowserRouter([
   {
@@ -792,31 +789,15 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      {
-        path: "products",
-        element: <ProductList />,
-      },
-      {
-        path: "products/new",
-        element: <NewProduct />,
-      },
-      {
-        path: "products/:id/edit",
-        element: <EditProduct />,
-      },
+     
     ],
   },
   {
     path: "login",
     element: <Login />,
   },
-
   {
-    path: "auth/forgot-password",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "auth/register",
+    path: "new-user",
     element: <NewUser />,
   },
   {
