@@ -14,8 +14,34 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+<<<<<<< HEAD
     // TODO: Implement registration logic
     console.log('Registration attempt:', formData);
+=======
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      await authService.register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      });
+      navigate('/login');
+    } catch (error) {
+      setErrors({
+        general: error instanceof Error ? error.message : 'Une erreur est survenue',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+>>>>>>> parent of a00ddc4 (update bad changes)
   };
 
   return (
@@ -27,9 +53,17 @@ export default function Register() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Ou{' '}
+<<<<<<< HEAD
             <Link to="/auth/login" className="font-medium text-blue-600 hover:text-blue-500">
               connectez-vous à votre compte
             </Link>
+=======
+            <motion.span whileHover={{ scale: 1.05 }}>
+              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                connectez-vous à votre compte
+              </Link>
+            </motion.span>
+>>>>>>> parent of a00ddc4 (update bad changes)
           </p>
         </div>
 
@@ -137,8 +171,24 @@ export default function Register() {
             </div>
           </div>
 
+<<<<<<< HEAD
           <div>
             <button
+=======
+          <div className="flex items-center justify-between">
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate('/login')}
+              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour
+            </motion.button>
+
+            <motion.button
+>>>>>>> parent of a00ddc4 (update bad changes)
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
