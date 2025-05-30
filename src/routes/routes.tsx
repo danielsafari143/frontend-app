@@ -37,6 +37,22 @@ import Inventory from '../features/inventory/Inventory';
 import InventoryDashboard from "../features/inventory/pages/InventoryDashboard";
 import Invoices from '../features/invoices/Invoices';
 import InvoicesDashboard from '../features/invoices/pages/Dashboard';
+import ChartOfAccounts from '../features/accounting/pages/ChartOfAccounts';
+import JournalEntries from '../features/accounting/pages/JournalEntries';
+import FinancialStatements from '../features/accounting/pages/FinancialStatements';
+import GeneralLedger from '../features/accounting/pages/GeneralLedger';
+import AccountsPayable from '../features/accounting/pages/AccountsPayable';
+import AccountsReceivable from '../features/accounting/pages/AccountsReceivable';
+import CashBank from '../features/accounting/pages/CashBank';
+import FixedAssets from '../features/accounting/pages/FixedAssets';
+import AnalyticalAccounting from '../features/accounting/pages/AnalyticalAccounting';
+import Budgeting from '../features/accounting/pages/Budgeting';
+import Tax from '../features/accounting/pages/Tax';
+import Payroll from '../features/accounting/pages/Payroll';
+import Documents from '../features/accounting/pages/Documents';
+import Reports from '../features/accounting/pages/Reports';
+import AccountingSettings from '../features/accounting/pages/Settings';
+
 
 export const router = createBrowserRouter([
   {
@@ -155,7 +171,63 @@ export const router = createBrowserRouter([
       },
       {
         path: "accounting/chart-of-accounts",
-        element: <ChartOfAccountsConfig />,
+        element: <ChartOfAccounts />,
+      },
+      {
+        path: "accounting/journal-entries",
+        element: <JournalEntries />,
+      },
+      {
+        path: "accounting/financial-statements",
+        element: <FinancialStatements />,
+      },
+      {
+        path: "accounting/general-ledger",
+        element: <GeneralLedger />,
+      },
+      {
+        path: "accounting/accounts-payable",
+        element: <AccountsPayable />,
+      },
+      {
+        path: "accounting/accounts-receivable",
+        element: <AccountsReceivable />,
+      },
+      {
+        path: "accounting/cash-bank",
+        element: <CashBank />,
+      },
+      {
+        path: "accounting/fixed-assets",
+        element: <FixedAssets />,
+      },
+      {
+        path: "accounting/analytical",
+        element: <AnalyticalAccounting />,
+      },
+      {
+        path: "accounting/budgeting",
+        element: <Budgeting />,
+      },
+      {
+        path: "accounting/tax",
+        element: <Tax />,
+      },
+      {
+        path: "accounting/payroll",
+        element: <Payroll />,
+      },
+      {
+        path: "accounting/documents",
+        element: <Documents />,
+      },
+      {
+        path: "accounting/reports",
+        element: <Reports />,
+      },
+      {
+        path: "accounting/settings",
+        element: <AccountingSettings />,
       },
       {
         path: "hr",

@@ -9,8 +9,10 @@ import {
   Search,
   Filter,
   FileSpreadsheet,
-  AlertCircle
+  AlertCircle,
+  ArrowLeft,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface AccountClass {
   id: number;
@@ -82,6 +84,7 @@ const initialAccountClasses: AccountClass[] = [
 ];
 
 export default function ChartOfAccounts() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedClasses, setExpandedClasses] = useState<number[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
@@ -106,39 +109,45 @@ export default function ChartOfAccounts() {
   });
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <BookOpen className="w-8 h-8 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-900">Plan Comptable</h1>
-        </div>
-        <p className="text-gray-600">
-          Gérez vos classes de comptes et comptes
-        </p>
-      </div>
-
-      {/* Actions Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <input
-            type="text"
-            placeholder="Rechercher une classe ou un compte..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-          <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
-        </div>
-        <div className="flex gap-2">
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <Plus className="w-5 h-5" />
-            Nouvelle Classe
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate('/accounting')}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <ArrowLeft className="w-6 h-6 text-gray-600" />
           </button>
-          <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-            <FileSpreadsheet className="w-5 h-5" />
-            Exporter
-          </button>
+          <div>
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <BookOpen className="w-7 h-7 text-blue-600" />
+              Plan Comptable
+            </h1>
+            <p className="text-gray-500">Gestion du plan comptable OHADA</p>
+          </div>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              placeholder="Rechercher une classe ou un compte..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+          </div>
+          <div className="flex gap-2">
+            <button className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <Plus className="w-5 h-5" />
+              Nouvelle Classe
+            </button>
+            <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+              <FileSpreadsheet className="w-5 h-5" />
+              Exporter
+            </button>
+          </div>
         </div>
       </div>
 
