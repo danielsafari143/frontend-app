@@ -18,8 +18,6 @@ import CRMDashboard from "../features/crm/pages/Dashboard";
 import Accounting from "../features/accounting/Accounting";
 import HRDashboard from "../features/hr/pages/HRDashboard";
 import EmployeeList from "../features/hr/pages/EmployeeList";
-import NewEmployee from "../features/hr/pages/NewEmployee";
-import EditEmployee from "../features/hr/pages/EditEmployee";
 import LeaveManagement from "../features/hr/pages/LeaveManagement";
 import Login from "../features/auth/pages/Login";
 import NewUser from "../features/auth/pages/Register";
@@ -463,14 +461,6 @@ export const router = createBrowserRouter([
       {
         path: "hr/employees",
         element: <EmployeeList />,
-      },
-      {
-        path: "hr/employees/new",
-        element: <NewEmployee />,
-      },
-      {
-        path: "hr/employees/:id/edit",
-        element: <EditEmployee />,
       },
       {
         path: "hr/leaves",
