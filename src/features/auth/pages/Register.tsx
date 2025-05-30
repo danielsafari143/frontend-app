@@ -95,7 +95,7 @@ export default function Register() {
         email: formData.email,
         password: formData.password,
       });
-      navigate('/auth/login');
+      navigate('/login');
     } catch (error) {
       setErrors({
         general: error instanceof Error ? error.message : 'Une erreur est survenue',
@@ -139,7 +139,7 @@ export default function Register() {
           <p className="mt-2 text-center text-sm text-gray-600">
             Ou{' '}
             <motion.span whileHover={{ scale: 1.05 }}>
-              <Link to="/auth/login" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
                 connectez-vous à votre compte
               </Link>
             </motion.span>
@@ -442,7 +442,7 @@ export default function Register() {
               type="button"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate('/auth/login')}
+              onClick={() => navigate('/login')}
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
