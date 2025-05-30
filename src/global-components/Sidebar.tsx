@@ -37,7 +37,8 @@ import {
   ChevronRight,
   Brain,
   Calendar,
-  GitBranch
+  GitBranch,
+  ArrowUpDown
 } from "lucide-react";
 
 interface SidebarProps {
@@ -163,7 +164,7 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/tax" className={navItemClasses("/tax")}>
+                  <Link to="/fiscalites" className={navItemClasses("/fiscalites")}>
                     <Landmark size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Fiscalité</span>}
                   </Link>
@@ -190,6 +191,24 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   <Link to="/finance" className={navItemClasses("/finance")}>
                     <Wallet size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Finance & Trésorerie</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/finance/treasury" className={navItemClasses("/finance/treasury")}>
+                    <Landmark size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Trésorerie</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/finance/cash-flow" className={navItemClasses("/finance/cash-flow")}>
+                    <ArrowUpDown size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Flux de Trésorerie</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/finance/budgeting" className={navItemClasses("/finance/budgeting")}>
+                    <FileSpreadsheet size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Budgets & Prévisions</span>}
                   </Link>
                 </li>
               </ul>
