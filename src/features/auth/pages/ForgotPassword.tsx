@@ -23,53 +23,8 @@ export default function ForgotPassword() {
           </p>
         </div>
 
-<<<<<<< HEAD
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm">
-=======
-        <AnimatePresence>
-          {errors.general && (
-            <motion.div
-              variants={errorVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="bg-red-50 border-l-4 border-red-500 text-red-600 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <span className="block sm:inline">{errors.general}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {success ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <div className="bg-green-50 border-l-4 border-green-500 text-green-600 px-4 py-3 rounded relative mb-6">
-              <p>Un email de réinitialisation a été envoyé à votre adresse email.</p>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate('/login')}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour à la connexion
-            </motion.button>
-          </motion.div>
-        ) : (
-          <motion.form 
-            className="mt-8 space-y-6"
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
->>>>>>> parent of a00ddc4 (update bad changes)
             <div>
               <label htmlFor="email" className="sr-only">
                 Adresse email
@@ -93,7 +48,6 @@ export default function ForgotPassword() {
             </div>
           </div>
 
-<<<<<<< HEAD
           <div>
             <button
               type="submit"
@@ -102,19 +56,6 @@ export default function ForgotPassword() {
               Envoyer le lien de réinitialisation
             </button>
           </div>
-=======
-            <div className="flex items-center justify-between">
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/login')}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour
-              </motion.button>
->>>>>>> parent of a00ddc4 (update bad changes)
 
           <div className="text-sm text-center">
             <Link to="/auth/login" className="font-medium text-blue-600 hover:text-blue-500">

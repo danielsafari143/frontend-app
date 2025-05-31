@@ -153,6 +153,14 @@ import PaymentDetails from "../features/fiscalites/pages/PaymentDetails";
 import TaxReminders from "../features/fiscalites/pages/TaxReminders";
 import TaxCompliance from "../features/fiscalites/pages/TaxCompliance";
 import ForgotPassword from "../features/auth/pages/ForgotPassword";
+import ProductList from "../features/products/pages/ProductList";
+import NewProduct from "../features/products/pages/NewProduct";
+import EditProduct from "../features/products/pages/EditProduct";
+import ExpenseList from "../features/expenses/pages/ExpenseList";
+import NewExpense from "../features/expenses/pages/NewExpense";
+import EditExpense from "../features/expenses/pages/EditExpense";
+import ReceivePaymentList from '../features/receive-payment/pages/ReceivePaymentList';
+import EditPayment from '../features/receive-payment/pages/EditPayment';
 
 export const router = createBrowserRouter([
   {
@@ -388,6 +396,31 @@ export const router = createBrowserRouter([
       {
         path: "crm/tasks/dashboard",
         element: <TasksDashboard />,
+      },
+      // Product routes
+      {
+        path: "products",
+        element: <ProductList />,
+      },
+      {
+        path: "products/new",
+        element: <NewProduct />,
+      },
+      {
+        path: "products/:id/edit",
+        element: <EditProduct />,
+      },
+      {
+        path: "expenses",
+        element: <ExpenseList />,
+      },
+      {
+        path: "expenses/new",
+        element: <NewExpense />,
+      },
+      {
+        path: "expenses/:id/edit",
+        element: <EditExpense />,
       },
       {
         path: "accounting",
@@ -799,7 +832,18 @@ export const router = createBrowserRouter([
           },
         ],
       },
-     
+      {
+        path: 'receive-payment',
+        element: <ReceivePaymentList />,
+      },
+      {
+        path: 'receive-payment/new',
+        element: <NewPayment />,
+      },
+      {
+        path: 'receive-payment/:id/edit',
+        element: <EditPayment />,
+      },
     ],
   },
   {

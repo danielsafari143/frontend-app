@@ -38,7 +38,8 @@ import {
   Brain,
   Calendar,
   GitBranch,
-  ArrowUpDown
+  ArrowUpDown,
+  Receipt as ReceiptIcon
 } from "lucide-react";
 
 interface SidebarProps {
@@ -140,6 +141,12 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/products" className={navItemClasses("/products")}>
+                    <Package size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Produits & Services</span>}
+                  </Link>
+                </li>
+                <li>
                   <Link to="/invoices" className={navItemClasses("/invoices")}>
                     <Receipt size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Factures & Devis</span>}
@@ -209,6 +216,18 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
                   <Link to="/finance/budgeting" className={navItemClasses("/finance/budgeting")}>
                     <FileSpreadsheet size={20} className="flex-shrink-0" />
                     {!isCollapsed && <span className="text-sm">Budgets & Prévisions</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/expenses" className={navItemClasses("/expenses")}>
+                    <ReceiptIcon size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Dépenses</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/receive-payment" className={navItemClasses("/receive-payment")}>
+                    <CreditCard size={20} className="flex-shrink-0" />
+                    {!isCollapsed && <span className="text-sm">Paiements</span>}
                   </Link>
                 </li>
               </ul>
