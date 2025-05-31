@@ -5,6 +5,7 @@ import {
   Upload,
   X,
 } from 'lucide-react';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface CandidateFormData {
   name: string;
@@ -26,6 +27,7 @@ interface CandidateFormData {
 export default function EditCandidate() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<CandidateFormData>({
     name: '',
     email: '',
@@ -44,25 +46,30 @@ export default function EditCandidate() {
   });
 
   useEffect(() => {
-    // TODO: Fetch candidate data
-    // For now, using sample data
-    setFormData({
+    // TODO: Replace with actual API call
+    const mockCandidate: CandidateFormData = {
       name: 'Jean Dupont',
-      email: 'jean.dupont@email.com',
-      phone: '+33 6 12 34 56 78',
+      email: 'jean.dupont@example.com',
+      phone: '+225 0123456789',
       position: 'Développeur Full Stack',
-      location: 'Paris',
+      location: 'Abidjan',
       experience: '5 ans',
       education: 'Master en Informatique',
       resume: null,
-      coverLetter: 'Lettre de motivation détaillée...',
+      coverLetter: 'Lettre de motivation...',
       source: 'LinkedIn',
-      expectedSalary: '45-50K€',
+      expectedSalary: '1500000',
       availability: 'Immédiate',
-      notes: 'Candidat très prometteur avec une bonne expérience...',
-      status: 'interviewed',
-    });
+      notes: 'Candidat prometteur',
+      status: 'reviewed'
+    };
+    setFormData(mockCandidate);
+    setIsLoading(false);
   }, [id]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

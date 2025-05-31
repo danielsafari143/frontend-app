@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -12,6 +12,7 @@ import {
   Home,
   FileText,
 } from 'lucide-react';
+import LoadingSpinner from '../../../../global-components/ui/LoadingSpinner';
 
 interface LoanFormData {
   type: 'personal' | 'business' | 'mortgage';
@@ -27,6 +28,7 @@ interface LoanFormData {
 
 export default function NewLoan() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<LoanFormData>({
     type: 'personal',
     amount: '',
@@ -39,11 +41,18 @@ export default function NewLoan() {
     documents: [],
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement loan creation logic
-    console.log('Creating new loan:', formData);
-    navigate('/finance/loans');
+    setIsLoading(true);
+    try {
+      // TODO: Implement form submission
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      navigate('/finance/loans');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -318,10 +327,17 @@ export default function NewLoan() {
           </button>
           <button
             type="submit"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            disabled={isLoading}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Save className="w-5 h-5" />
-            Enregistrer
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <LoadingSpinner fullScreen={false} size="sm" />
+                <span>Création en cours...</span>
+              </div>
+            ) : (
+              <Save className="w-5 h-5" />
+            )}
           </button>
         </div>
       </form>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Brain, Send, FileText, Calculator, BookOpen, MessageSquare, Sparkles } from 'lucide-react';
+import LoadingSpinner from '../../global-components/ui/LoadingSpinner';
 
 interface Message {
   id: string;
@@ -143,11 +144,7 @@ export default function AccountantCopilot() {
           {isLoading && (
             <div className="flex justify-start">
               <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
-                <div className="flex gap-2">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce delay-100" />
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce delay-200" />
-                </div>
+                <LoadingSpinner fullScreen={false} size="md" />
               </div>
             </div>
           )}

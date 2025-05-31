@@ -15,6 +15,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import DeleteConfirmation from '../../../components/DeleteConfirmation';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface Supplier {
   id: string;
@@ -74,7 +75,7 @@ export default function SupplierDetails() {
   };
 
   if (!supplier) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

@@ -46,6 +46,38 @@ interface SidebarProps {
   onCollapse: (collapsed: boolean) => void;
 }
 
+const styles = `
+  @keyframes gradient-x {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-gradient-x {
+    animation: gradient-x 3s ease infinite;
+    background-size: 200% auto;
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(0.98);
+    }
+  }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
 export default function Sidebar({ onCollapse }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -82,9 +114,14 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
           {/* Logo Section */}
           <div className="px-4 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-blue-50 to-white">
             {!isCollapsed && (
-              <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                FinCalc
-              </h2>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center animate-pulse-subtle hover:animate-none transition-all duration-300 hover:scale-110">
+                  <span className="text-white font-bold text-lg">CP</span>
+                </div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 bg-clip-text text-transparent bg-size-200 animate-gradient-x">
+                  Compta Pro
+                </h2>
+              </div>
             )}
             <button
               onClick={() => handleCollapse(!isCollapsed)}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -18,7 +18,13 @@ import {
   BarChart3,
   PieChart,
   LineChart,
+  Edit2,
+  Trash2,
+  DollarSign,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface Budget {
   id: string;
@@ -46,44 +52,11 @@ export default function Budgeting() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedYear, setSelectedYear] = useState<number>(2024);
   const [showNewBudgetModal, setShowNewBudgetModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
   // Sample data
-  const budgets: Budget[] = [
-    {
-      id: '1',
-      name: 'Budget Marketing',
-      department: 'Marketing',
-      year: 2024,
-      total: 50000000,
-      spent: 15000000,
-      remaining: 35000000,
-      status: 'on-track',
-      lastUpdated: '2024-03-15',
-    },
-    {
-      id: '2',
-      name: 'Budget IT',
-      department: 'Informatique',
-      year: 2024,
-      total: 75000000,
-      spent: 45000000,
-      remaining: 30000000,
-      status: 'over-budget',
-      lastUpdated: '2024-03-18',
-    },
-    {
-      id: '3',
-      name: 'Budget RH',
-      department: 'Ressources Humaines',
-      year: 2024,
-      total: 30000000,
-      spent: 10000000,
-      remaining: 20000000,
-      status: 'under-budget',
-      lastUpdated: '2024-03-20',
-    },
-  ];
-
   const budgetVersions: BudgetVersion[] = [
     {
       id: '1',
@@ -154,6 +127,51 @@ export default function Budgeting() {
         return status;
     }
   };
+
+  useEffect(() => {
+    // TODO: Replace with actual API call
+    const mockBudgets: Budget[] = [
+      {
+        id: '1',
+        name: 'Budget Marketing',
+        department: 'Marketing',
+        year: 2024,
+        total: 50000000,
+        spent: 15000000,
+        remaining: 35000000,
+        status: 'on-track' as const,
+        lastUpdated: '2024-03-15',
+      },
+      {
+        id: '2',
+        name: 'Budget IT',
+        department: 'Informatique',
+        year: 2024,
+        total: 75000000,
+        spent: 45000000,
+        remaining: 30000000,
+        status: 'over-budget' as const,
+        lastUpdated: '2024-03-18',
+      },
+      {
+        id: '3',
+        name: 'Budget RH',
+        department: 'Ressources Humaines',
+        year: 2024,
+        total: 30000000,
+        spent: 10000000,
+        remaining: 20000000,
+        status: 'under-budget' as const,
+        lastUpdated: '2024-03-20',
+      },
+    ];
+    setBudgets(mockBudgets);
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="p-6 space-y-6">

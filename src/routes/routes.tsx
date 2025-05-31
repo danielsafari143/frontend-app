@@ -148,7 +148,7 @@ import TaxReports from "../features/fiscalites/pages/TaxReports";
 import TaxSettings from "../features/fiscalites/pages/TaxSettings";
 import NewDeclaration from "../features/fiscalites/pages/NewDeclaration";
 import DeclarationDetails from "../features/fiscalites/pages/DeclarationDetails";
-import NewPayment from "../features/fiscalites/pages/NewPayment";
+import NewPayment from "../features/finance/pages/receive-payment/pages/NewPayment";
 import PaymentDetails from "../features/fiscalites/pages/PaymentDetails";
 import TaxReminders from "../features/fiscalites/pages/TaxReminders";
 import TaxCompliance from "../features/fiscalites/pages/TaxCompliance";
@@ -156,11 +156,13 @@ import ForgotPassword from "../features/auth/pages/ForgotPassword";
 import ProductList from "../features/products/pages/ProductList";
 import NewProduct from "../features/products/pages/NewProduct";
 import EditProduct from "../features/products/pages/EditProduct";
-import ExpenseList from "../features/expenses/pages/ExpenseList";
-import NewExpense from "../features/expenses/pages/NewExpense";
-import EditExpense from "../features/expenses/pages/EditExpense";
-import ReceivePaymentList from '../features/receive-payment/pages/ReceivePaymentList';
-import EditPayment from '../features/receive-payment/pages/EditPayment';
+import ExpenseList from "../features/finance/pages/expenses/pages/ExpenseList";
+import NewExpense from "../features/finance/pages/expenses/pages/NewExpense";
+import EditExpense from "../features/finance/pages/expenses/pages/EditExpense";
+import ReceivePaymentList from '../features/finance/pages/receive-payment/pages/ReceivePaymentList';
+import EditPayment from '../features/finance/pages/receive-payment/pages/EditPayment';
+import { elements } from "chart.js";
+import OhadaCashFlowReport from '../features/finance/reports/OhadaCashFlowReport'
 
 export const router = createBrowserRouter([
   {
@@ -658,8 +660,16 @@ export const router = createBrowserRouter([
             element: <CashFlow />,
           },
           {
+            path: '',
+            element: <CashFlow />,
+          },
+          {
             path: 'budgeting',
             element: <Budgeting />,
+          },
+          {
+            path:"reports/ohada-cash-flow",
+            element:<OhadaCashFlowReport/>
           },
           {
             path: 'analysis',
@@ -725,6 +735,7 @@ export const router = createBrowserRouter([
             path: 'bank-relations/new',
             element: <NewBank />,
           },
+
         ],
       },
       {

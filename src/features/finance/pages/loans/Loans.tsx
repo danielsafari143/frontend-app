@@ -23,6 +23,7 @@ import {
   Trash2,
   Edit,
 } from 'lucide-react';
+import LoadingSpinner from '../../../../global-components/ui/LoadingSpinner';
 
 interface Loan {
   id: string;
@@ -53,42 +54,68 @@ export default function Loans() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<Loan | null>(null);
   const actionButtonRef = useRef<HTMLButtonElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loans, setLoans] = useState<Loan[]>([]);
 
-  // Sample loans data
-  const loans: Loan[] = [
-    {
-      id: '1',
-      type: 'business',
-      amount: 50000,
-      interestRate: 5.5,
-      term: 36,
-      startDate: '2024-01-01',
-      endDate: '2027-01-01',
-      status: 'active',
-      lender: 'Bank of America',
-      reference: 'LOAN-2024-001',
-      nextPayment: {
-        amount: 1500,
-        date: '2024-04-01',
+  useEffect(() => {
+    // TODO: Replace with actual API call
+    const mockLoans: Loan[] = [
+      {
+        id: '1',
+        type: 'business' as const,
+        amount: 50000000,
+        interestRate: 5.5,
+        term: 36,
+        startDate: '2024-01-01',
+        endDate: '2027-01-01',
+        status: 'active',
+        lender: 'UBA',
+        reference: 'LOAN-2024-001',
+        nextPayment: {
+          amount: 1500000,
+          date: '2024-04-01',
+        },
       },
-    },
-    {
-      id: '2',
-      type: 'personal',
-      amount: 15000,
-      interestRate: 7.2,
-      term: 24,
-      startDate: '2024-02-15',
-      endDate: '2026-02-15',
-      status: 'pending',
-      lender: 'Chase Bank',
-      reference: 'LOAN-2024-002',
-      nextPayment: {
-        amount: 750,
-        date: '2024-04-15',
+      {
+        id: '2',
+        type: 'personal' as const,
+        amount: 15000000,
+        interestRate: 4.5,
+        term: 24,
+        startDate: '2024-02-01',
+        endDate: '2026-02-01',
+        status: 'pending',
+        lender: 'SGBCI',
+        reference: 'LOAN-2024-002',
+        nextPayment: {
+          amount: 750000,
+          date: '2024-05-01',
+        },
       },
-    },
-  ];
+      {
+        id: '3',
+        type: 'mortgage' as const,
+        amount: 100000000,
+        interestRate: 3.5,
+        term: 240,
+        startDate: '2024-03-01',
+        endDate: '2044-03-01',
+        status: 'active',
+        lender: 'BOA',
+        reference: 'LOAN-2024-003',
+        nextPayment: {
+          amount: 500000,
+          date: '2024-04-01',
+        },
+      },
+    ];
+    setLoans(mockLoans);
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
