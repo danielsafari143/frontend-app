@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -17,6 +17,7 @@ import {
   AlertCircle,
   FileText,
 } from 'lucide-react';
+import LoadingSpinner from '../../../../global-components/ui/LoadingSpinner';
 
 interface Loan {
   id: string;
@@ -46,42 +47,52 @@ interface Loan {
 export default function LoanDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [loan, setLoan] = useState<Loan | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
-  // Sample loan data
-  const loan: Loan = {
-    id: '1',
-    type: 'business',
-    amount: 50000,
-    interestRate: 5.5,
-    term: 36,
-    startDate: '2024-01-01',
-    endDate: '2027-01-01',
-    status: 'active',
-    lender: 'Bank of America',
-    reference: 'LOAN-2024-001',
-    purpose: 'Expansion des opérations commerciales',
-    collateral: 'Équipements de bureau',
-    nextPayment: {
-      amount: 1500,
-      date: '2024-04-01',
-    },
-    documents: [
-      {
-        name: 'Contrat de prêt.pdf',
-        type: 'PDF',
-        size: '2.4 MB',
-        date: '2024-01-01',
+  useEffect(() => {
+    // TODO: Replace with actual API call
+    const mockLoan: Loan = {
+      id: '1',
+      type: 'business',
+      amount: 50000,
+      interestRate: 5.5,
+      term: 36,
+      startDate: '2024-01-01',
+      endDate: '2027-01-01',
+      status: 'active',
+      lender: 'Bank of America',
+      reference: 'LOAN-2024-001',
+      purpose: 'Expansion des opérations commerciales',
+      collateral: 'Équipements de bureau',
+      nextPayment: {
+        amount: 1500,
+        date: '2024-04-01',
       },
-      {
-        name: 'Plan financier.xlsx',
-        type: 'Excel',
-        size: '1.2 MB',
-        date: '2024-01-01',
-      },
-    ],
-  };
+      documents: [
+        {
+          name: 'Contrat de prêt.pdf',
+          type: 'PDF',
+          size: '2.4 MB',
+          date: '2024-01-01',
+        },
+        {
+          name: 'Plan financier.xlsx',
+          type: 'Excel',
+          size: '1.2 MB',
+          date: '2024-01-01',
+        },
+      ],
+    };
+    setLoan(mockLoan);
+    setIsLoading(false);
+  }, [id]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -166,7 +177,7 @@ export default function LoanDetails() {
             </button>
             <div>
               <h1 className="text-xl font-bold text-gray-900">Détails du prêt</h1>
-              <p className="text-sm text-gray-500">Référence: {loan.reference}</p>
+              <p className="text-sm text-gray-500">Référence: {loan?.reference}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -212,20 +223,20 @@ export default function LoanDetails() {
               <div className="bg-white rounded-lg border shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    {getLoanTypeIcon(loan.type)}
+                    {getLoanTypeIcon(loan?.type || '')}
                     <div>
                       <h2 className="text-lg font-semibold text-gray-900">
-                        {getLoanTypeLabel(loan.type)}
+                        {getLoanTypeLabel(loan?.type || '')}
                       </h2>
-                      <p className="text-sm text-gray-500">{loan.lender}</p>
+                      <p className="text-sm text-gray-500">{loan?.lender}</p>
                     </div>
                   </div>
-                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${getStatusColor(loan.status)}`}>
-                    {getStatusIcon(loan.status)}
+                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${getStatusColor(loan?.status || '')}`}>
+                    {getStatusIcon(loan?.status || '')}
                     <span className="text-sm font-medium">
-                      {loan.status === 'active' ? 'Actif' :
-                       loan.status === 'paid' ? 'Payé' :
-                       loan.status === 'overdue' ? 'En retard' : 'En attente'}
+                      {loan?.status === 'active' ? 'Actif' :
+                       loan?.status === 'paid' ? 'Payé' :
+                       loan?.status === 'overdue' ? 'En retard' : 'En attente'}
                     </span>
                   </div>
                 </div>
@@ -236,20 +247,20 @@ export default function LoanDetails() {
                     <div className="flex items-center gap-2">
                       <DollarSign className="w-5 h-5 text-gray-400" />
                       <span className="text-2xl font-semibold text-gray-900">
-                        {loan.amount.toLocaleString()}
+                        {loan?.amount.toLocaleString()}
                       </span>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Taux d'intérêt</div>
                     <div className="text-2xl font-semibold text-gray-900">
-                      {loan.interestRate}%
+                      {loan?.interestRate}%
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Durée</div>
                     <div className="text-2xl font-semibold text-gray-900">
-                      {loan.term} mois
+                      {loan?.term} mois
                     </div>
                   </div>
                   <div>
@@ -258,10 +269,10 @@ export default function LoanDetails() {
                       <Calendar className="w-5 h-5 text-gray-400" />
                       <div>
                         <div className="text-lg font-semibold text-gray-900">
-                          {new Date(loan.nextPayment.date).toLocaleDateString()}
+                          {new Date(loan?.nextPayment.date || '').toLocaleDateString()}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {loan.nextPayment.amount.toLocaleString()}
+                          {loan?.nextPayment.amount.toLocaleString()}
                         </div>
                       </div>
                     </div>
@@ -275,22 +286,22 @@ export default function LoanDetails() {
                 <div className="space-y-4">
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Objectif du prêt</div>
-                    <div className="text-gray-900">{loan.purpose}</div>
+                    <div className="text-gray-900">{loan?.purpose}</div>
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Garantie</div>
-                    <div className="text-gray-900">{loan.collateral}</div>
+                    <div className="text-gray-900">{loan?.collateral}</div>
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Date de début</div>
                     <div className="text-gray-900">
-                      {new Date(loan.startDate).toLocaleDateString()}
+                      {new Date(loan?.startDate || '').toLocaleDateString()}
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Date de fin</div>
                     <div className="text-gray-900">
-                      {new Date(loan.endDate).toLocaleDateString()}
+                      {new Date(loan?.endDate || '').toLocaleDateString()}
                     </div>
                   </div>
                 </div>
@@ -300,7 +311,7 @@ export default function LoanDetails() {
               <div className="bg-white rounded-lg border shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Documents</h3>
                 <div className="space-y-3">
-                  {loan.documents.map((doc, index) => (
+                  {loan?.documents.map((doc, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -337,7 +348,7 @@ export default function LoanDetails() {
                     <div className="flex items-center gap-2">
                       <DollarSign className="w-5 h-5 text-gray-400" />
                       <span className="text-2xl font-semibold text-gray-900">
-                        {loan.nextPayment.amount.toLocaleString()}
+                        {loan?.nextPayment.amount.toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -346,7 +357,7 @@ export default function LoanDetails() {
                     <div className="flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-gray-400" />
                       <span className="text-lg font-medium text-gray-900">
-                        {new Date(loan.nextPayment.date).toLocaleDateString()}
+                        {new Date(loan?.nextPayment.date || '').toLocaleDateString()}
                       </span>
                     </div>
                   </div>

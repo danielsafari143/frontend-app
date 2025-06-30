@@ -15,6 +15,7 @@ import {
   Building,
 } from 'lucide-react';
 import DeleteConfirmation from '../../../components/DeleteConfirmation';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface Customer {
   id: string;
@@ -76,7 +77,7 @@ export default function CustomerDetails() {
   };
 
   if (!customer) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

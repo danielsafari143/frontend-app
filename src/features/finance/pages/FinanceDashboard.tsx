@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wallet,
@@ -18,7 +18,10 @@ import {
   Plus,
   Download,
   Calendar,
+  CreditCard,
+  Users,
 } from 'lucide-react';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface FinancialMetric {
   title: string;
@@ -44,6 +47,23 @@ interface Module {
 
 export default function FinanceDashboard() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState({
+    // ... existing state ...
+  });
+
+  useEffect(() => {
+    // TODO: Replace with actual API call
+    const mockData = {
+      // ... existing mock data ...
+    };
+    setDashboardData(mockData);
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   const metrics: FinancialMetric[] = [
     {

@@ -21,6 +21,7 @@ import {
   History,
 } from 'lucide-react';
 import DeleteConfirmation from '../../../components/DeleteConfirmation';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface DisciplinaryCase {
   id: string;
@@ -170,7 +171,7 @@ export default function DisciplinaryCaseDetails() {
   };
 
   if (!case_) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

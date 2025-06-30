@@ -12,6 +12,7 @@ import {
   Upload,
   X,
 } from 'lucide-react';
+import LoadingSpinner from '../../../../global-components/ui/LoadingSpinner';
 
 interface LoanFormData {
   type: 'personal' | 'business' | 'mortgage';
@@ -28,6 +29,7 @@ interface LoanFormData {
 export default function EditLoan() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<LoanFormData>({
     type: 'personal',
     amount: 0,
@@ -55,7 +57,12 @@ export default function EditLoan() {
       documents: [],
     };
     setFormData(loanData);
+    setIsLoading(false);
   }, [id]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

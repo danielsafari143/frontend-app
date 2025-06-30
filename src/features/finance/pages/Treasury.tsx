@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -20,7 +20,11 @@ import {
   XCircle,
   ArrowUpRight,
   ArrowDownRight,
+  Edit2,
+  Trash2,
+  Calendar,
 } from 'lucide-react';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface BankAccount {
   id: string;
@@ -48,61 +52,75 @@ export default function Treasury() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
   const [showReconciliationModal, setShowReconciliationModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [treasuryData, setTreasuryData] = useState<{
+    accounts: BankAccount[];
+    transactions: Transaction[];
+    balances: Record<string, number>;
+  }>({
+    accounts: [],
+    transactions: [],
+    balances: {},
+  });
 
-  // Sample data
-  const accounts: BankAccount[] = [
-    {
-      id: '1',
-      name: 'Compte Principal',
-      bank: 'UBA',
-      accountNumber: 'FR76 XXXX XXXX XXXX',
-      currency: 'FCFA',
-      balance: 25000000,
-      lastReconciliation: '2024-03-15',
-      status: 'reconciled',
-    },
-    {
-      id: '2',
-      name: 'Compte USD',
-      bank: 'Ecobank',
-      accountNumber: 'US12 XXXX XXXX XXXX',
-      currency: 'USD',
-      balance: 15000,
-      lastReconciliation: '2024-03-10',
-      status: 'pending',
-    },
-    {
-      id: '3',
-      name: 'Compte EUR',
-      bank: 'BOA',
-      accountNumber: 'EU34 XXXX XXXX XXXX',
-      currency: 'EUR',
-      balance: 8000,
-      lastReconciliation: '2024-03-05',
-      status: 'overdue',
-    },
-  ];
+  useEffect(() => {
+    // TODO: Replace with actual API call
+    const mockData = {
+      accounts: [
+        {
+          id: '1',
+          name: 'Compte Principal',
+          bank: 'UBA',
+          accountNumber: 'CI0012345678',
+          currency: 'XOF',
+          balance: 25000000,
+          lastReconciliation: '2024-03-15',
+          status: 'reconciled' as const,
+        },
+        {
+          id: '2',
+          name: 'Compte Épargne',
+          bank: 'SGBCI',
+          accountNumber: 'CI0098765432',
+          currency: 'XOF',
+          balance: 15000000,
+          lastReconciliation: '2024-03-10',
+          status: 'pending' as const,
+        },
+      ],
+      transactions: [
+        {
+          id: '1',
+          date: '2024-03-20',
+          description: 'Virement client',
+          amount: 5000000,
+          type: 'in' as const,
+          status: 'completed' as const,
+          reference: 'INV-2024-001',
+        },
+        {
+          id: '2',
+          date: '2024-03-19',
+          description: 'Paiement fournisseur',
+          amount: 2500000,
+          type: 'out' as const,
+          status: 'pending' as const,
+          reference: 'PO-2024-002',
+        },
+      ],
+      balances: {
+        'XOF': 40000000,
+        'USD': 50000,
+        'EUR': 30000,
+      },
+    };
+    setTreasuryData(mockData);
+    setIsLoading(false);
+  }, []);
 
-  const transactions: Transaction[] = [
-    {
-      id: '1',
-      date: '2024-03-20',
-      description: 'Paiement client XYZ',
-      amount: 5000000,
-      type: 'in',
-      status: 'completed',
-      reference: 'INV-2024-001',
-    },
-    {
-      id: '2',
-      date: '2024-03-19',
-      description: 'Paiement fournisseur ABC',
-      amount: 2500000,
-      type: 'out',
-      status: 'pending',
-      reference: 'PO-2024-002',
-    },
-  ];
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   const getCurrencyIcon = (currency: string) => {
     switch (currency) {
@@ -198,7 +216,7 @@ export default function Treasury() {
 
       {/* Bank Accounts */}
       <div className="bg-white rounded-xl border shadow-sm divide-y">
-        {accounts.map(account => (
+        {treasuryData.accounts.map(account => (
           <div key={account.id} className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -249,7 +267,7 @@ export default function Treasury() {
           </button>
         </div>
         <div className="space-y-4">
-          {transactions.map(transaction => (
+          {treasuryData.transactions.map(transaction => (
             <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-4">
                 <div className={`p-2 rounded-lg ${

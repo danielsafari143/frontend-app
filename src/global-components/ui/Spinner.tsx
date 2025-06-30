@@ -4,12 +4,14 @@ interface SpinnerProps {
   size?: "sm" | "md" | "lg";
   color?: "blue" | "white";
   className?: string;
+  blurBackground?: boolean;
 }
 
 export default function Spinner({ 
   size = "md", 
   color = "blue",
-  className = ""
+  className = "",
+  blurBackground = true
 }: SpinnerProps) {
   const sizeClasses = {
     sm: "w-4 h-4",
@@ -23,7 +25,7 @@ export default function Spinner({
   };
 
   return (
-    <div className={`flex items-center justify-center ${className}`}>
+    <div className={`fixed inset-0 flex items-center justify-center z-50 ${blurBackground ? 'backdrop-blur-sm bg-black/20' : ''} ${className}`}>
       <div
         className={`${sizeClasses[size]} ${colorClasses[color]} animate-spin`}
         role="status"

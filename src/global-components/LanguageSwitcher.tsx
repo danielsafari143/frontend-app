@@ -20,7 +20,7 @@ export default function LanguageSwitcher() {
         }}
       >
         <Globe className="h-4 w-4 mr-2" />
-        {i18n.language === 'fr' ? t('common.french') : t('common.english')}
+        {i18n.language === 'fr' ? t('fr') : t('en')}
       </button>
     </div>
   );

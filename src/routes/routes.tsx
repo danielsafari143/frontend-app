@@ -18,9 +18,11 @@ import CRMDashboard from "../features/crm/pages/Dashboard";
 import Accounting from "../features/accounting/Accounting";
 import HRDashboard from "../features/hr/pages/HRDashboard";
 import EmployeeList from "../features/hr/pages/EmployeeList";
+import NewEmployee from "../features/hr/pages/NewEmployee";
+import EditEmployee from "../features/hr/pages/EditEmployee";
 import LeaveManagement from "../features/hr/pages/LeaveManagement";
-import Login from "../features/auth/pages/Login";
-import NewUser from "../features/auth/pages/Register";
+import Login from "../features/auth/Login";
+import NewUser from "../features/auth/NewUser";
 import PrintQuotation from "../features/sales/pages/quotations/PrintQuotation";
 import ChartOfAccountsConfig from "../features/accounting/pages/ChartOfAccountsConfig";
 import NotFound from "../features/error/NotFound";
@@ -146,11 +148,21 @@ import TaxReports from "../features/fiscalites/pages/TaxReports";
 import TaxSettings from "../features/fiscalites/pages/TaxSettings";
 import NewDeclaration from "../features/fiscalites/pages/NewDeclaration";
 import DeclarationDetails from "../features/fiscalites/pages/DeclarationDetails";
-import NewPayment from "../features/fiscalites/pages/NewPayment";
+import NewPayment from "../features/finance/pages/receive-payment/pages/NewPayment";
 import PaymentDetails from "../features/fiscalites/pages/PaymentDetails";
 import TaxReminders from "../features/fiscalites/pages/TaxReminders";
 import TaxCompliance from "../features/fiscalites/pages/TaxCompliance";
 import ForgotPassword from "../features/auth/pages/ForgotPassword";
+import ProductList from "../features/products/pages/ProductList";
+import NewProduct from "../features/products/pages/NewProduct";
+import EditProduct from "../features/products/pages/EditProduct";
+import ExpenseList from "../features/finance/pages/expenses/pages/ExpenseList";
+import NewExpense from "../features/finance/pages/expenses/pages/NewExpense";
+import EditExpense from "../features/finance/pages/expenses/pages/EditExpense";
+import ReceivePaymentList from '../features/finance/pages/receive-payment/pages/ReceivePaymentList';
+import EditPayment from '../features/finance/pages/receive-payment/pages/EditPayment';
+import { elements } from "chart.js";
+import OhadaCashFlowReport from '../features/finance/reports/OhadaCashFlowReport'
 
 export const router = createBrowserRouter([
   {
@@ -387,6 +399,31 @@ export const router = createBrowserRouter([
         path: "crm/tasks/dashboard",
         element: <TasksDashboard />,
       },
+      // Product routes
+      {
+        path: "products",
+        element: <ProductList />,
+      },
+      {
+        path: "products/new",
+        element: <NewProduct />,
+      },
+      {
+        path: "products/:id/edit",
+        element: <EditProduct />,
+      },
+      {
+        path: "expenses",
+        element: <ExpenseList />,
+      },
+      {
+        path: "expenses/new",
+        element: <NewExpense />,
+      },
+      {
+        path: "expenses/:id/edit",
+        element: <EditExpense />,
+      },
       {
         path: "accounting",
         element: <Accounting />,
@@ -458,6 +495,14 @@ export const router = createBrowserRouter([
       {
         path: "hr/employees",
         element: <EmployeeList />,
+      },
+      {
+        path: "hr/employees/new",
+        element: <NewEmployee />,
+      },
+      {
+        path: "hr/employees/:id/edit",
+        element: <EditEmployee />,
       },
       {
         path: "hr/leaves",
@@ -615,8 +660,16 @@ export const router = createBrowserRouter([
             element: <CashFlow />,
           },
           {
+            path: '',
+            element: <CashFlow />,
+          },
+          {
             path: 'budgeting',
             element: <Budgeting />,
+          },
+          {
+            path:"reports/ohada-cash-flow",
+            element:<OhadaCashFlowReport/>
           },
           {
             path: 'analysis',
@@ -682,6 +735,7 @@ export const router = createBrowserRouter([
             path: 'bank-relations/new',
             element: <NewBank />,
           },
+
         ],
       },
       {
@@ -789,19 +843,26 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: 'receive-payment',
+        element: <ReceivePaymentList />,
+      },
+      {
+        path: 'receive-payment/new',
+        element: <NewPayment />,
+      },
+      {
+        path: 'receive-payment/:id/edit',
+        element: <EditPayment />,
+      },
     ],
   },
   {
     path: "login",
     element: <Login />,
   },
-
   {
-    path: "auth/forgot-password",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "auth/register",
+    path: "new-user",
     element: <NewUser />,
   },
   {

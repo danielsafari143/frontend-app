@@ -16,6 +16,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import DeleteConfirmation from '../../../components/DeleteConfirmation';
+import LoadingSpinner from '../../../global-components/ui/LoadingSpinner';
 
 interface Evaluation {
   id: string;
@@ -50,6 +51,7 @@ export default function EvaluationDetails() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [expandedSections, setExpandedSections] = useState({
     objectives: true,
@@ -97,25 +99,26 @@ export default function EvaluationDetails() {
       timeline: [
         {
           date: '2024-01-01',
-          action: 'Évaluation démarrée',
+          action: 'Evaluation started',
           user: 'Marie Martin',
-          details: 'L\'évaluation annuelle a été initiée.',
+          details: 'Initial assessment completed',
         },
         {
           date: '2024-01-15',
-          action: 'Objectifs évalués',
+          action: 'Mid-term review',
           user: 'Marie Martin',
-          details: 'Les objectifs ont été évalués et commentés.',
+          details: 'Progress review and feedback provided',
         },
         {
           date: '2024-01-31',
-          action: 'Évaluation terminée',
+          action: 'Final evaluation',
           user: 'Marie Martin',
-          details: 'L\'évaluation a été complétée et soumise.',
+          details: 'Final assessment and rating submitted',
         },
       ],
     };
     setEvaluation(mockEvaluation);
+    setIsLoading(false);
   }, [id]);
 
   const handleDelete = () => {
@@ -193,8 +196,8 @@ export default function EvaluationDetails() {
     }
   };
 
-  if (!evaluation) {
-    return <div>Loading...</div>;
+  if (isLoading || !evaluation) {
+    return <LoadingSpinner />;
   }
 
   return (
