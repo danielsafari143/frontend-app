@@ -24,6 +24,7 @@ import {
   Mail,
   FileSignature,
 } from 'lucide-react';
+import { hrPermission, RessourceType } from '../../../permissions/permission';
 
 interface WorkflowStep {
   id: number;
@@ -48,6 +49,9 @@ interface MenuItem {
   path: string;
   color: string;
   stats: string;
+  show: boolean;
+  type: string;
+  ressource : RessourceType | null
 }
 
 export default function HR() {
@@ -131,15 +135,21 @@ export default function HR() {
       icon: <LayoutDashboard className="w-6 h-6" />,
       path: '/hr/dashboard',
       color: 'bg-blue-600',
-      stats: '156 employés actifs'
+      stats: '156 employés actifs',
+      show: false,
+      type: 'dashboard',
+      ressource: null
     },
     {
       title: 'Gestion des employés',
+      type: 'employee',
       description: 'Gérer les informations des employés, contrats et dossiers',
       icon: <Users className="w-6 h-6" />,
       path: '/hr/employees',
       color: 'bg-blue-500',
-      stats: '156 employés'
+      stats: '156 employés',
+      show: false,
+      ressource: null
     },
     {
       title: 'Gestion disciplinaire',
@@ -147,7 +157,11 @@ export default function HR() {
       icon: <AlertTriangle className="w-6 h-6" />,
       path: '/hr/disciplinary',
       color: 'bg-orange-500',
-      stats: '3 cas en cours'
+      stats: '3 cas en cours',
+      show: false,
+      type: 'disciplinary' // Changed from ''
+      ,
+      ressource: null
     },
     {
       title: 'Formation',
@@ -155,7 +169,11 @@ export default function HR() {
       icon: <GraduationCap className="w-6 h-6" />,
       path: '/hr/training',
       color: 'bg-green-500',
-      stats: '8 formations en cours'
+      stats: '8 formations en cours',
+      show: false,
+      type: 'training' // Changed from ''
+      ,
+      ressource: null
     },
     {
       title: 'Évaluation',
@@ -163,7 +181,11 @@ export default function HR() {
       icon: <Award className="w-6 h-6" />,
       path: '/hr/evaluation',
       color: 'bg-purple-500',
-      stats: '12 évaluations en attente'
+      stats: '12 évaluations en attente',
+      show: false,
+      type: 'evaluation' // Changed from ''
+      ,
+      ressource: null
     },
     {
       title: 'Paie',
@@ -171,7 +193,11 @@ export default function HR() {
       icon: <DollarSign className="w-6 h-6" />,
       path: '/hr/payroll',
       color: 'bg-yellow-500',
-      stats: '156 fiches de paie'
+      stats: '156 fiches de paie',
+      show: false,
+      type: 'payroll' // Changed from ''
+      ,
+      ressource: null
     },
     {
       title: 'Congés',
@@ -179,7 +205,10 @@ export default function HR() {
       icon: <Calendar className="w-6 h-6" />,
       path: '/hr/leaves',
       color: 'bg-red-500',
-      stats: '25 demandes en attente'
+      stats: '25 demandes en attente',
+      show: false,
+      type: 'leaves',
+      ressource: null
     },
     {
       title: 'Recrutement',
@@ -187,7 +216,10 @@ export default function HR() {
       icon: <UserPlus className="w-6 h-6" />,
       path: '/hr/recruitment',
       color: 'bg-indigo-500',
-      stats: '15 candidatures en cours'
+      stats: '15 candidatures en cours',
+      show: false,
+      type: 'recruitment',
+      ressource: null
     },
     {
       title: 'Contrats',
@@ -195,33 +227,54 @@ export default function HR() {
       icon: <FileText className="w-6 h-6" />,
       path: '/hr/contracts',
       color: 'bg-pink-500',
-      stats: '156 contrats actifs'
+      stats: '156 contrats actifs',
+      show: false,
+      type: 'contracts',
+      ressource: null
     },
     {
       title: 'Conformité',
+      type: 'compliance', // Changed from ''
       description: 'Assurer la conformité aux réglementations',
       icon: <Shield className="w-6 h-6" />,
       path: '/hr/compliance',
       color: 'bg-teal-500',
-      stats: '100% conforme'
+      stats: '100% conforme',
+      show: false,
+      ressource: null
     },
     {
       title: 'Planning',
+      type: 'planning',
       description: 'Gérer les horaires et les plannings',
       icon: <Clock className="w-6 h-6" />,
       path: '/hr/scheduling',
       color: 'bg-cyan-500',
-      stats: '156 plannings actifs'
+      stats: '156 plannings actifs',
+      show: false,
+      ressource: null
     },
     {
       title: 'Rapports',
+      type: 'reports',
       description: 'Consulter les rapports et statistiques RH',
       icon: <BarChart2 className="w-6 h-6" />,
       path: '/hr/reports',
       color: 'bg-gray-500',
-      stats: '25 rapports disponibles'
+      stats: '25 rapports disponibles',
+      show: false,
+      ressource: null
     }
   ];
+
+  menuItems.forEach((menuItem) => { 
+    const permission = hrPermission.find(hrPerm => hrPerm.type === menuItem.type); 
+  
+    if (permission) { 
+      menuItem.show = permission.read;
+      menuItem.ressource = permission;
+    }
+  });
 
   return (
     <div className="p-6 space-y-8">
@@ -234,7 +287,9 @@ export default function HR() {
           </h1>
           <p className="text-gray-500">Gérez tous les aspects des ressources humaines</p>
         </div>
-        <div className="flex gap-2">
+       {
+        hrPermission.find(e => e.type === 'dashboard')?.read && (
+          <div className="flex gap-2">
           <button
             onClick={() => navigate('/hr/dashboard')}
             className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
@@ -242,14 +297,17 @@ export default function HR() {
             <BarChart2 className="w-4 h-4" /> Tableau de bord
           </button>
         </div>
+        )
+       }
       </div>
 
       {/* Main Sections Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {menuItems.map((item, index) => (
-          <button
+        {menuItems.map((item, index) => {
+          return item.show && (
+            <button
             key={index}
-            onClick={() => navigate(item.path)}
+            onClick={() => navigate(item.path, {state: {ressources : item.ressource}})}
             className="group bg-white rounded-xl border shadow-sm p-6 hover:shadow-md transition-shadow text-left"
           >
             <div className="flex items-start justify-between">
@@ -265,7 +323,8 @@ export default function HR() {
               </div>
             </div>
           </button>
-        ))}
+          )
+        })}
       </div>
 
       {/* Workflow Templates */}

@@ -10,25 +10,12 @@ import {
   Tag,
   Shield,
 } from 'lucide-react';
+import { Employee } from '../../../types/hr';
 
 interface Role {
   id: string;
   name: string;
   description: string;
-}
-
-interface Employee {
-  id: string;
-  name: string;
-  position: string;
-  department: string;
-  email: string;
-  phone: string;
-  hireDate: string;
-  status: 'active' | 'on_leave' | 'terminated';
-  contractType: 'full_time' | 'part_time' | 'contract';
-  roles: Role[];
-  photo?: string; // URL of the employee's photo
 }
 
 interface EmployeeDetailsProps {
@@ -39,10 +26,21 @@ interface EmployeeDetailsProps {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'active': return 'bg-green-100 text-green-800';
-    case 'on_leave': return 'bg-yellow-100 text-yellow-800';
-    case 'terminated': return 'bg-red-100 text-red-800';
+    case 'ACTIVE': return 'bg-green-100 text-green-800';
+    case 'ON_LEAVE': return 'bg-yellow-100 text-yellow-800';
+    case 'SUSPENDED': return 'bg-orange-100 text-orange-800';
+    case 'TERMINATED': return 'bg-red-100 text-red-800';
     default: return 'bg-gray-100 text-gray-800';
+  }
+};
+
+const getStatusText = (status: string) => {
+  switch (status) {
+    case 'ACTIVE': return 'Actif';
+    case 'ON_LEAVE': return 'En congé';
+    case 'SUSPENDED': return 'Suspendu';
+    case 'TERMINATED': return 'Terminé';
+    default: return status;
   }
 };
 
@@ -143,8 +141,7 @@ export default function EmployeeDetails({ isOpen, onClose, employee }: EmployeeD
                     <Tag className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-600">Statut: </span>
                     <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full ${getStatusColor(employee.status)}`}>
-                      {employee.status === 'active' ? 'Actif' :
-                       employee.status === 'on_leave' ? 'En congé' : 'Terminé'}
+                      {getStatusText(employee.status)}
                     </span>
                   </div>
                 </div>

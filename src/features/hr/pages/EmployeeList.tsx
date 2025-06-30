@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -22,26 +22,12 @@ import {
 } from 'lucide-react';
 import DeleteConfirmation from '../../../components/DeleteConfirmation';
 import EmployeeDetails from '../components/EmployeeDetails';
+import { useLocation } from 'react-router-dom';
+import { RessourceType } from '../../../permissions/permission';
+import Spinner from '../../../global-components/ui/Spinner';
+import { Employee } from '../../../types/hr';
+import { fetchEmployees } from '../../../api/hr/employee';
 
-interface Role {
-  id: string;
-  name: string;
-  description: string;
-}
-
-interface Employee {
-  id: string;
-  name: string;
-  position: string;
-  department: string;
-  email: string;
-  phone: string;
-  hireDate: string;
-  status: 'active' | 'on_leave' | 'terminated';
-  contractType: 'full_time' | 'part_time' | 'contract';
-  roles: Role[];
-  photo?: string; // URL of the employee's photo
-}
 
 export default function EmployeeList() {
   const navigate = useNavigate();
@@ -52,40 +38,33 @@ export default function EmployeeList() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const permissions = useLocation().state;
 
+  console.log(permissions.ressources)
   // Sample data for demonstration
-  const employees: Employee[] = [
-    {
-      id: 'EMP001',
-      name: 'Jean Dupont',
-      position: 'Développeur Full Stack',
-      department: 'Informatique',
-      email: 'jean.dupont@example.com',
-      phone: '+33 6 12 34 56 78',
-      hireDate: '2023-01-15',
-      status: 'active',
-      contractType: 'full_time',
-      roles: [
-        { id: 'employee', name: 'Employé', description: 'Accès basique' },
-        { id: 'manager', name: 'Manager', description: 'Gestion d\'équipe' }
-      ],
-    },
-    {
-      id: 'EMP002',
-      name: 'Marie Martin',
-      position: 'Responsable RH',
-      department: 'Ressources Humaines',
-      email: 'marie.martin@example.com',
-      phone: '+33 6 23 45 67 89',
-      hireDate: '2022-06-01',
-      status: 'active',
-      contractType: 'full_time',
-      roles: [
-        { id: 'hr_manager', name: 'Responsable RH', description: 'Gestion des ressources humaines' },
-        { id: 'manager', name: 'Manager', description: 'Gestion d\'équipe' }
-      ],
-    },
-  ];
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadEmployees = async () => {
+      try {
+        setLoading(true);
+        const result = await fetchEmployees(1, 10, 'd91bb74f-8a46-4fcb-87a8-814f2b6ed3d9');
+        if (result.data) {
+          setLoading(false);
+          setEmployees(result.data);
+        }
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEmployees();
+  }, []);
+
+  console.log(employees)
 
   const toggleEmployee = (employeeId: string) => {
     const newExpanded = new Set(expandedEmployees);
@@ -111,20 +90,25 @@ export default function EmployeeList() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'on_leave': return 'bg-yellow-100 text-yellow-800';
-      case 'terminated': return 'bg-red-100 text-red-800';
+      case 'ACTIVE': return 'bg-green-100 text-green-800';
+      case 'ON_LEAVE': return 'bg-yellow-100 text-yellow-800';
+      case 'SUSPENDED': return 'bg-orange-100 text-orange-800';
+      case 'TERMINATED': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getContractTypeText = (type: string) => {
-    switch (type) {
-      case 'full_time': return 'Temps plein';
-      case 'part_time': return 'Temps partiel';
-      case 'contract': return 'Contrat';
-      default: return type;
-    }
+    const types = {
+      full_time: 'Temps plein',
+      part_time: 'Temps partiel',
+      contract: 'Contrat'
+    };
+    return types[type as keyof typeof types] || type;
+  };
+
+  const formatStatus = (status: string) => {
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
   };
 
   const handleViewDetails = (employee: Employee) => {
@@ -155,18 +139,18 @@ export default function EmployeeList() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button
+                {permissions.ressources.create && <button
                   onClick={() => navigate('/hr/employees/new')}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Plus className="w-4 h-4" /> Nouvel employé
-                </button>
+                </button>}
               </div>
             </div>
           </div>
         </div>
       </div>
-
+     {loading&&<Spinner/>}
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
@@ -199,9 +183,10 @@ export default function EmployeeList() {
               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Tous les statuts</option>
-              <option value="active">Actif</option>
-              <option value="on_leave">En congé</option>
-              <option value="terminated">Terminé</option>
+              <option value="ACTIVE">Actif</option>
+              <option value="ON_LEAVE">En congé</option>
+              <option value="SUSPENDED">Suspendu</option>
+              <option value="TERMINATED">Terminé</option>
             </select>
           </div>
         </div>
@@ -238,8 +223,7 @@ export default function EmployeeList() {
                   </div>
                   <div className="flex items-center gap-4">
                     <span className={`inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full ${getStatusColor(employee.status)}`}>
-                      {employee.status === 'active' ? 'Actif' :
-                       employee.status === 'on_leave' ? 'En congé' : 'Terminé'}
+                     {formatStatus(employee.status)}
                     </span>
                     <div className="flex gap-2">
                       <button
@@ -253,6 +237,7 @@ export default function EmployeeList() {
                         onClick={() => navigate(`/hr/employees/${employee.id}/edit`)}
                         className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
                         title="Modifier"
+                        disabled={!permissions.ressources.update}
                       >
                         <Edit2 className="w-5 h-5" />
                       </button>
@@ -260,12 +245,14 @@ export default function EmployeeList() {
                         onClick={() => handleDelete(employee)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Supprimer"
+                        disabled={!permissions.ressources.delete}
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => toggleEmployee(employee.id)}
                         className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                        disabled={!permissions.ressources.read}
                       >
                         {expandedEmployees.has(employee.id) ? (
                           <ChevronUp className="w-5 h-5" />
